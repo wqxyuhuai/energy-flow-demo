@@ -2051,19 +2051,23 @@ html&gt;body{padding:0}&lt;/style&gt;
       gap: 6px;
     }
 
-    #flow-styles-root .fd-shape-select {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 24px;
-      padding: 0 30px 0 10px;
+    #flow-styles-root .fd-shape-trigger {
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      height: 28px;
+      min-width: 96px;
+      padding: 0 12px;
       border: 0;
-      border-radius: 7px;
+      border-radius: 9px;
       color: #000000;
       background: var(--lab-card);
       box-shadow: 0 1.8px 1.35px rgba(0, 0, 0, .05);
       font-size: 11px;
       font-weight: 500;
-      line-height: 24px;
+      line-height: 28px;
       cursor: pointer;
       transition:
         color 160ms ease,
@@ -2075,26 +2079,72 @@ html&gt;body{padding:0}&lt;/style&gt;
       display: inline-flex;
       flex: none;
       height: 28px;
-      padding: 2px;
-      border-radius: 9px;
-      background: #ececef;
     }
 
-    #flow-styles-root .fd-shape-control::after {
-      content: &quot;&quot;;
-      position: absolute;
-      top: 50%;
-      right: 11px;
+    #flow-styles-root .fd-shape-chevron {
+      display: block;
       width: 6px;
       height: 6px;
-      border-right: 1.5px solid #000000;
-      border-bottom: 1.5px solid #000000;
-      pointer-events: none;
-      transform: translateY(-68%) rotate(45deg);
+      flex: none;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transition: transform 160ms ease;
     }
 
-    #flow-styles-root .fd-shape-select:hover,
-    #flow-styles-root .fd-shape-select:focus-visible {
+    #flow-styles-root .fd-shape-control.is-open .fd-shape-chevron {
+      transform: translateY(2px) rotate(225deg);
+    }
+
+    #flow-styles-root .fd-shape-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 6;
+      display: grid;
+      min-width: 118px;
+      gap: 2px;
+      padding: 4px;
+      border: 1px solid rgba(0, 0, 0, .07);
+      border-radius: 10px;
+      background: var(--lab-card);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, .1);
+    }
+
+    #flow-styles-root .fd-shape-menu[hidden] {
+      display: none;
+    }
+
+    #flow-styles-root .fd-shape-option {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 7px;
+      color: #000000;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 400;
+      text-align: left;
+      cursor: pointer;
+      transition:
+        color 160ms ease,
+        background-color 160ms ease;
+    }
+
+    #flow-styles-root .fd-shape-option:hover {
+      background: #f3f3f5;
+    }
+
+    #flow-styles-root .fd-shape-option[aria-selected=&quot;true&quot;] {
+      background: #ececef;
+      font-weight: 500;
+    }
+
+    #flow-styles-root .fd-shape-trigger:hover,
+    #flow-styles-root .fd-shape-trigger:focus-visible {
       background: #f7f7f8;
     }
 
@@ -3072,14 +3122,17 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;section class=&quot;fd-main&quot; aria-label=&quot;Battery flow chart&quot;&gt;
       &lt;div class=&quot;fd-hero&quot;&gt;
         &lt;div class=&quot;fd-hero-toolbar&quot;&gt;
-          &lt;label class=&quot;fd-shape-control&quot;&gt;
-            &lt;span class=&quot;sr-only&quot;&gt;Path shape&lt;/span&gt;
-            &lt;select class=&quot;fd-shape-select&quot; id=&quot;fd-shape-select&quot; aria-label=&quot;Path shape&quot;&gt;
-              &lt;option value=&quot;straight&quot;&gt;Straight&lt;/option&gt;
-              &lt;option value=&quot;lshape&quot;&gt;L-Shape&lt;/option&gt;
-              &lt;option value=&quot;sshape&quot;&gt;S-Shape&lt;/option&gt;
-            &lt;/select&gt;
-          &lt;/label&gt;
+          &lt;div class=&quot;fd-shape-control&quot; id=&quot;fd-shape-control&quot;&gt;
+            &lt;button class=&quot;fd-shape-trigger&quot; id=&quot;fd-shape-trigger&quot; type=&quot;button&quot; aria-label=&quot;Path shape&quot; aria-haspopup=&quot;listbox&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;fd-shape-menu&quot;&gt;
+              &lt;span id=&quot;fd-shape-label&quot;&gt;Straight&lt;/span&gt;
+              &lt;span class=&quot;fd-shape-chevron&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;div class=&quot;fd-shape-menu&quot; id=&quot;fd-shape-menu&quot; role=&quot;listbox&quot; aria-label=&quot;Path shape&quot; hidden&gt;
+              &lt;button class=&quot;fd-shape-option&quot; type=&quot;button&quot; role=&quot;option&quot; data-shape=&quot;straight&quot; aria-selected=&quot;true&quot;&gt;Straight&lt;/button&gt;
+              &lt;button class=&quot;fd-shape-option&quot; type=&quot;button&quot; role=&quot;option&quot; data-shape=&quot;lshape&quot; aria-selected=&quot;false&quot;&gt;L-Shape&lt;/button&gt;
+              &lt;button class=&quot;fd-shape-option&quot; type=&quot;button&quot; role=&quot;option&quot; data-shape=&quot;sshape&quot; aria-selected=&quot;false&quot;&gt;S-Shape&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
           &lt;div class=&quot;fd-color-group fd-chart-type&quot; role=&quot;group&quot; aria-label=&quot;Flow type&quot;&gt;
             &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;orange&quot; aria-pressed=&quot;false&quot;&gt;
               &lt;span class=&quot;fd-color-dot is-orange&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;AC
@@ -3348,6 +3401,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       };
       const curveConfigVersion = 10;
       const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
+      const shapeLabels = { straight: &quot;Straight&quot;, lshape: &quot;L-Shape&quot;, sshape: &quot;S-Shape&quot; };
       const state = {
         modelMax: 50,
         batteryPower: 14.13,
@@ -3419,7 +3473,11 @@ html&gt;body{padding:0}&lt;/style&gt;
       const flowCanvas = document.getElementById(&quot;fd-flow-canvas&quot;);
       const flowContext = flowCanvas.getContext(&quot;2d&quot;);
       const trackPath = document.getElementById(&quot;fd-track-path&quot;);
-      const shapeSelect = document.getElementById(&quot;fd-shape-select&quot;);
+      const shapeControl = document.getElementById(&quot;fd-shape-control&quot;);
+      const shapeTrigger = document.getElementById(&quot;fd-shape-trigger&quot;);
+      const shapeLabel = document.getElementById(&quot;fd-shape-label&quot;);
+      const shapeMenu = document.getElementById(&quot;fd-shape-menu&quot;);
+      const shapeOptions = Array.from(root.querySelectorAll(&quot;.fd-shape-option&quot;));
       const pauseButton = document.getElementById(&quot;fd-pause&quot;);
       const svgNamespace = &quot;http://www.w3.org/2000/svg&quot;;
       let flowPathLength = 1;
@@ -3784,7 +3842,10 @@ html&gt;body{padding:0}&lt;/style&gt;
         inverterModel.textContent = &quot;iHybrid &quot; + state.modelMax + &quot;K&quot;;
         root.dataset.flowColor = state.flowColor;
         root.dataset.flowShape = state.pathShape;
-        shapeSelect.value = state.pathShape;
+        shapeLabel.textContent = shapeLabels[state.pathShape] || shapeLabels.straight;
+        shapeOptions.forEach((option) =&gt; {
+          option.setAttribute(&quot;aria-selected&quot;, String(option.dataset.shape === state.pathShape));
+        });
         const flowStart = state.flowColor === &quot;orange&quot;
           ? hexToRgba(state.acGradientStart, state.acGradientStartOpacity / 100)
           : hexToRgba(state.dcGradientStart, state.dcGradientOpacity / 100);
@@ -3844,10 +3905,35 @@ html&gt;body{padding:0}&lt;/style&gt;
         });
       });
 
-      shapeSelect.addEventListener(&quot;change&quot;, () =&gt; {
-        state.pathShape = shapeNames.includes(shapeSelect.value) ? shapeSelect.value : &quot;straight&quot;;
-        render();
-        persist();
+      function setShapeMenuOpen(open) {
+        shapeMenu.hidden = !open;
+        shapeControl.classList.toggle(&quot;is-open&quot;, open);
+        shapeTrigger.setAttribute(&quot;aria-expanded&quot;, String(open));
+      }
+
+      shapeTrigger.addEventListener(&quot;click&quot;, () =&gt; {
+        setShapeMenuOpen(shapeMenu.hidden);
+      });
+
+      shapeOptions.forEach((option) =&gt; {
+        option.addEventListener(&quot;click&quot;, () =&gt; {
+          state.pathShape = shapeNames.includes(option.dataset.shape) ? option.dataset.shape : &quot;straight&quot;;
+          render();
+          persist();
+          setShapeMenuOpen(false);
+          shapeTrigger.focus();
+        });
+      });
+
+      document.addEventListener(&quot;click&quot;, (event) =&gt; {
+        if (!shapeControl.contains(event.target)) setShapeMenuOpen(false);
+      });
+
+      shapeControl.addEventListener(&quot;keydown&quot;, (event) =&gt; {
+        if (event.key === &quot;Escape&quot;) {
+          setShapeMenuOpen(false);
+          shapeTrigger.focus();
+        }
       });
 
       if (typeof ResizeObserver === &quot;function&quot;) {
