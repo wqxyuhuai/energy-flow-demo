@@ -3567,16 +3567,36 @@ html&gt;body{padding:0}&lt;/style&gt;
         const totalLength = fill.getTotalLength();
         const dashOffset = parseFloat(getComputedStyle(fill).strokeDashoffset) || 0;
         const rawStart = -dashOffset;
-        const startDistance = clamp(rawStart, 0, 100);
-        const endDistance = clamp(rawStart + fill.__fdSegmentLength, 0, 100);
-        if (endDistance &lt;= startDistance) return;
-
-        const startPoint = fill.getPointAtLength(totalLength * startDistance / 100);
-        const endPoint = fill.getPointAtLength(totalLength * endDistance / 100);
+        const endDistance = rawStart + fill.__fdSegmentLength;
+        const startPoint = pointAtExtendedLength(fill, totalLength, totalLength * rawStart / 100);
+        const endPoint = pointAtExtendedLength(fill, totalLength, totalLength * endDistance / 100);
         gradient.setAttribute(&quot;x1&quot;, String(startPoint.x));
         gradient.setAttribute(&quot;y1&quot;, String(startPoint.y));
         gradient.setAttribute(&quot;x2&quot;, String(endPoint.x));
         gradient.setAttribute(&quot;y2&quot;, String(endPoint.y));
+      }
+
+      function pointAtExtendedLength(path, totalLength, distance) {
+        if (distance &gt;= 0 &amp;&amp; distance &lt;= totalLength) return path.getPointAtLength(distance);
+
+        const probeLength = Math.min(1, totalLength);
+        if (distance &lt; 0) {
+          const start = path.getPointAtLength(0);
+          const probe = path.getPointAtLength(probeLength);
+          const scale = (distance - 0) / probeLength;
+          return {
+            x: start.x + (probe.x - start.x) * scale,
+            y: start.y + (probe.y - start.y) * scale
+          };
+        }
+
+        const end = path.getPointAtLength(totalLength);
+        const probe = path.getPointAtLength(totalLength - probeLength);
+        const scale = (distance - totalLength) / probeLength;
+        return {
+          x: end.x + (end.x - probe.x) * scale,
+          y: end.y + (end.y - probe.y) * scale
+        };
       }
 
       function updateFlowGradients() {
