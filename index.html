@@ -2054,6 +2054,43 @@ html&gt;body{padding:0}&lt;/style&gt;
       gap: 3px;
     }
 
+    #flow-styles-root .fd-direction-toggle {
+      box-sizing: border-box;
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 9px;
+      color: #000000;
+      background: #ececef;
+      box-shadow: none;
+      cursor: pointer;
+      transition:
+        background-color 160ms ease,
+        transform 160ms ease;
+    }
+
+    #flow-styles-root .fd-direction-toggle:hover,
+    #flow-styles-root .fd-direction-toggle:focus-visible {
+      background: #e4e4e7;
+    }
+
+    #flow-styles-root .fd-direction-arrow {
+      display: block;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      transition: transform 180ms cubic-bezier(.2, 0, .2, 1);
+    }
+
+    #flow-styles-root[data-flow-direction=&quot;reverse&quot;] .fd-direction-arrow {
+      transform: rotate(180deg);
+    }
+
     #flow-styles-root .fd-shape-trigger {
       box-sizing: border-box;
       display: flex;
@@ -3126,6 +3163,9 @@ html&gt;body{padding:0}&lt;/style&gt;
     &lt;section class=&quot;fd-main&quot; aria-label=&quot;Battery flow chart&quot;&gt;
       &lt;div class=&quot;fd-hero&quot;&gt;
         &lt;div class=&quot;fd-hero-toolbar&quot;&gt;
+          &lt;button class=&quot;fd-direction-toggle&quot; id=&quot;fd-direction-toggle&quot; type=&quot;button&quot; aria-label=&quot;Flow direction: battery to inverter&quot; aria-pressed=&quot;false&quot;&gt;
+            &lt;span class=&quot;fd-direction-arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/span&gt;
+          &lt;/button&gt;
           &lt;div class=&quot;fd-shape-control&quot; id=&quot;fd-shape-control&quot;&gt;
             &lt;button class=&quot;fd-shape-trigger&quot; id=&quot;fd-shape-trigger&quot; type=&quot;button&quot; aria-label=&quot;Path shape&quot; aria-haspopup=&quot;listbox&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;fd-shape-menu&quot;&gt;
               &lt;span id=&quot;fd-shape-label&quot;&gt;Straight&lt;/span&gt;
@@ -3410,6 +3450,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         modelMax: 50,
         batteryPower: 14.13,
         flowColor: &quot;green&quot;,
+        flowDirection: &quot;forward&quot;,
         pathShape: &quot;straight&quot;,
         isPaused: false,
         ...curveDefaults
@@ -3445,6 +3486,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         const canRestoreCurveParameters = privateState &amp;&amp; privateState.curveConfigVersion === curveConfigVersion;
         if (privateState &amp;&amp; Number.isFinite(privateState.batteryPower)) state.batteryPower = privateState.batteryPower;
         if (privateState &amp;&amp; (privateState.flowColor === &quot;green&quot; || privateState.flowColor === &quot;orange&quot;)) state.flowColor = privateState.flowColor;
+        if (privateState &amp;&amp; (privateState.flowDirection === &quot;forward&quot; || privateState.flowDirection === &quot;reverse&quot;)) state.flowDirection = privateState.flowDirection;
         if (privateState &amp;&amp; shapeNames.includes(privateState.pathShape)) state.pathShape = privateState.pathShape;
         curveParameterKeys.forEach((key) =&gt; {
           if (canRestoreCurveParameters &amp;&amp; Number.isFinite(privateState[key])) state[key] = privateState[key];
@@ -3456,8 +3498,10 @@ html&gt;body{padding:0}&lt;/style&gt;
         const query = new URLSearchParams(globalThis.location.search);
         const queryPower = Number(query.get(&quot;power&quot;));
         const queryColor = query.get(&quot;color&quot;);
+        const queryDirection = query.get(&quot;direction&quot;);
         if (query.has(&quot;power&quot;) &amp;&amp; Number.isFinite(queryPower)) state.batteryPower = queryPower;
         if (queryColor === &quot;green&quot; || queryColor === &quot;orange&quot;) state.flowColor = queryColor;
+        if (queryDirection === &quot;forward&quot; || queryDirection === &quot;reverse&quot;) state.flowDirection = queryDirection;
       } catch (_) {}
 
       const range = document.getElementById(&quot;fd-range&quot;);
@@ -3477,6 +3521,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       const flowCanvas = document.getElementById(&quot;fd-flow-canvas&quot;);
       const flowContext = flowCanvas.getContext(&quot;2d&quot;);
       const trackPath = document.getElementById(&quot;fd-track-path&quot;);
+      const directionToggle = document.getElementById(&quot;fd-direction-toggle&quot;);
       const shapeControl = document.getElementById(&quot;fd-shape-control&quot;);
       const shapeTrigger = document.getElementById(&quot;fd-shape-trigger&quot;);
       const shapeLabel = document.getElementById(&quot;fd-shape-label&quot;);
@@ -3717,7 +3762,10 @@ html&gt;body{padding:0}&lt;/style&gt;
 
       function drawFlowSegment(segment, progress) {
         const segmentLength = flowPathLength * clamp(segment.segmentFraction, 0, 1);
-        const travelStart = -segmentLength + progress * (flowPathLength + segmentLength);
+        const reverse = segment.direction === &quot;reverse&quot;;
+        const travelStart = reverse
+          ? flowPathLength - progress * (flowPathLength + segmentLength)
+          : -segmentLength + progress * (flowPathLength + segmentLength);
         const travelEnd = travelStart + segmentLength;
         const visibleStart = Math.max(0, travelStart);
         const visibleEnd = Math.min(flowPathLength, travelEnd);
@@ -3734,7 +3782,9 @@ html&gt;body{padding:0}&lt;/style&gt;
           const secondDistance = Math.min(flowPathLength, visibleStart + (visibleEnd - visibleStart) * (index + 1) / steps + 0.6);
           const secondPoint = trackPath.getPointAtLength(secondDistance);
           const centerDistance = (firstDistance + secondDistance) / 2;
-          const colorPosition = (centerDistance - travelStart) / Math.max(1, segmentLength);
+          const colorPosition = reverse
+            ? (travelEnd - centerDistance) / Math.max(1, segmentLength)
+            : (centerDistance - travelStart) / Math.max(1, segmentLength);
           flowContext.strokeStyle = flowColorAt(colorPosition, segment.colorModel);
           flowContext.beginPath();
           flowContext.moveTo(firstPoint.x, firstPoint.y);
@@ -3771,6 +3821,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           segmentFraction: m.segment / 100,
           width: m.width,
           colorModel: createFlowColorModel(),
+          direction: state.flowDirection,
           startedAt: performance.now(),
           staticProgress
         };
@@ -3812,6 +3863,7 @@ html&gt;body{padding:0}&lt;/style&gt;
               modelMaxKw: state.modelMax,
               batteryPowerKw: state.batteryPower,
               flowColor: state.flowColor,
+              flowDirection: state.flowDirection,
               pathShape: state.pathShape,
               curveParameters
             },
@@ -3819,6 +3871,7 @@ html&gt;body{padding:0}&lt;/style&gt;
               modelMax: state.modelMax,
               batteryPower: state.batteryPower,
               flowColor: state.flowColor,
+              flowDirection: state.flowDirection,
               pathShape: state.pathShape,
               curveConfigVersion,
               ...curveParameters
@@ -3847,7 +3900,12 @@ html&gt;body{padding:0}&lt;/style&gt;
         capNote.classList.toggle(&quot;is-capped&quot;, m.capped);
         inverterModel.textContent = &quot;iHybrid &quot; + state.modelMax + &quot;K&quot;;
         root.dataset.flowColor = state.flowColor;
+        root.dataset.flowDirection = state.flowDirection;
         root.dataset.flowShape = state.pathShape;
+        directionToggle.setAttribute(&quot;aria-pressed&quot;, String(state.flowDirection === &quot;reverse&quot;));
+        directionToggle.setAttribute(&quot;aria-label&quot;, state.flowDirection === &quot;reverse&quot;
+          ? &quot;Flow direction: inverter to battery&quot;
+          : &quot;Flow direction: battery to inverter&quot;);
         shapeLabel.textContent = shapeLabels[state.pathShape] || shapeLabels.straight;
         shapeOptions.forEach((option) =&gt; {
           option.setAttribute(&quot;aria-selected&quot;, String(option.dataset.shape === state.pathShape));
@@ -3909,6 +3967,12 @@ html&gt;body{padding:0}&lt;/style&gt;
           render();
           persist();
         });
+      });
+
+      directionToggle.addEventListener(&quot;click&quot;, () =&gt; {
+        state.flowDirection = state.flowDirection === &quot;reverse&quot; ? &quot;forward&quot; : &quot;reverse&quot;;
+        render();
+        persist();
       });
 
       function setShapeMenuOpen(open) {

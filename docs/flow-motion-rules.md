@@ -28,6 +28,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
   - Text: `13px`, pure black.
   - Toolbar gap: `3px`.
   - Shape control: one gray layer, no shadow, `9px` radius, neutral fill.
+- A `34px` direction-toggle button sits before the Shape selector. Its arrow points right for battery-to-inverter flow and rotates to point left for inverter-to-battery flow. The default is battery-to-inverter.
 - The Shape selector is a custom one-layer listbox trigger, not a native `<select>`. The collapsed control and expanded menu must not look like two stacked controls.
 - The Shape trigger reserves right-side space for its chevron. The chevron and label must remain vertically centered.
 - Shape menu options use the same `13px` text. Hover and selected states use neutral gray fills only; native browser blue highlighting must not appear.
@@ -61,7 +62,8 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Path start and end points must be calculated from the cards' actual bounding boxes so card-position changes update the connector automatically.
 - Path anchors must extend `8px` inside each card; the card masks the transparent fade and the visible line meets the card edge without a gap.
 - All shape variants use orthogonal routing with small rounded corners. Do not replace them with arbitrary freeform curves.
-- Flow direction is left to right.
+- Card order remains battery on the left and inverter on the right; only the moving-segment travel direction changes.
+- The flow direction control changes the travel direction of moving segments without changing card order or path geometry. The direction is persisted with the visualization state.
 
 ## 5. Track rendering
 
@@ -137,6 +139,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Window resizing must recompute the SVG viewBox, card-relative path, canvas dimensions, and rendered track.
 - Saved parameters must ignore incompatible old configurations through the curve configuration version.
 - The Shape menu closes after selection, on outside click, and on `Escape`; focus returns to the trigger after `Escape` or selection.
+- The direction toggle updates the arrow direction, moving-segment entry endpoint, and accessible label immediately.
 - Sliders must enlarge slightly on hover/focus for easier manipulation. Primary power slider: `4px` track and `14px` thumb at rest, `5px` track and `16px` thumb on hover/focus. Parameter sliders use the compact equivalent.
 - Slider tracks and thumbs are neutral gray (`#b3b3b6`, `#e1e1e3`, `#a3a3a6`) and have fully rounded ends. Do not use square slider ends or strong dark-gray thumbs.
 - Preset and control state changes use short eased transitions, approximately `140–180ms`; avoid abrupt color changes.
@@ -180,3 +183,4 @@ Before publication, verify:
 8. Pause, resume, reset, persistence, and responsive resizing.
 9. Shape and AC/DC controls have matching height, typography, alignment, and spacing.
 10. No clipped controls, overlapping cards, horizontal overflow, visible browser-default option styling, or dot-like line tails.
+11. Both flow directions animate from the correct endpoint and preserve the fixed segment length and local color pattern.

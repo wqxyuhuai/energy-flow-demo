@@ -10,7 +10,8 @@
 
 - Use English copy, the light WattDesk visual direction, SF Pro Display at weights `400/500`, and the current restrained gray/white component styling.
 - Do not wrap the app in a large outer white card.
-- Keep the flow direction left to right.
+- Keep battery on the left and inverter on the right; the default flow is battery-to-inverter.
+- Keep the direction toggle before the Shape selector; its arrow switches between battery-to-inverter and inverter-to-battery travel and must be persisted.
 - Keep the three routes orthogonal: `Straight`, `L-Shape`, and `S-Shape`.
 - The moving line is a fixed-length segment whose visibility changes only through clipping at cards and container edges. It must not grow, shrink, stretch, or turn into many simultaneous lines.
 - Endpoint fading and color transitions follow path arc length. Do not use fixed horizontal gradients.
