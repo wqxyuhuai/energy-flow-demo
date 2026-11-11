@@ -25,8 +25,8 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 - Segment length is derived from the `Segment Length` setting and normalized against the complete path length.
 - A segment starts before the visible path, enters from the source endpoint, follows the path continuously, and exits at the destination endpoint.
 - Path clipping may reveal or hide part of a segment at an endpoint, but the segment's color structure and length remain unchanged.
-- Segment speed is controlled by the power ratio, `Min Speed`, `Max Speed`, and `Curve Response`.
-- Segment thickness is controlled by the power ratio, `Min Width`, and `Max Width`.
+- Segment speed is controlled by the power ratio, `Min Speed`, `Max Speed`, and `Curve Response`; `Min Speed` defaults to `10px/s`.
+- Segment thickness is controlled by the power ratio, `Min Width`, and `Max Width`; `Min Width` defaults to `1.5px`.
 - `Line Overlap` controls the delay before the next segment enters and defaults to `10%`.
 
 ## 4. Color rendering

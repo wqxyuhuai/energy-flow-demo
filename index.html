@@ -2054,15 +2054,16 @@ html&gt;body{padding:0}&lt;/style&gt;
     #flow-styles-root .fd-shape-select {
       -webkit-appearance: none;
       appearance: none;
-      height: 28px;
+      height: 24px;
       padding: 0 30px 0 10px;
       border: 0;
-      border-radius: 9px;
+      border-radius: 7px;
       color: #000000;
-      background: #ececef;
+      background: var(--lab-card);
+      box-shadow: 0 1.8px 1.35px rgba(0, 0, 0, .05);
       font-size: 11px;
       font-weight: 500;
-      line-height: 28px;
+      line-height: 24px;
       cursor: pointer;
       transition:
         color 160ms ease,
@@ -2073,6 +2074,10 @@ html&gt;body{padding:0}&lt;/style&gt;
       position: relative;
       display: inline-flex;
       flex: none;
+      height: 28px;
+      padding: 2px;
+      border-radius: 9px;
+      background: #ececef;
     }
 
     #flow-styles-root .fd-shape-control::after {
@@ -2090,7 +2095,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
     #flow-styles-root .fd-shape-select:hover,
     #flow-styles-root .fd-shape-select:focus-visible {
-      background: #e4e4e7;
+      background: #f7f7f8;
     }
 
     #flow-styles-root .fd-chart-type .fd-color-button {
@@ -2389,8 +2394,8 @@ html&gt;body{padding:0}&lt;/style&gt;
 
     #flow-styles-root .fd-power-reading {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
+      flex-wrap: nowrap;
+      align-items: center;
       gap: 0;
       min-width: 0;
       padding: 0;
@@ -2399,11 +2404,26 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-power-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
       color: #000000;
       font-size: 13px;
       font-weight: 400;
       line-height: 1.2;
       font-variant-numeric: tabular-nums;
+    }
+
+    #flow-styles-root .fd-power-metric {
+      white-space: nowrap;
+    }
+
+    #flow-styles-root .fd-power-divider {
+      width: 1px;
+      height: 14px;
+      flex: none;
+      background: #c9c9cc;
     }
 
     #flow-styles-root .fd-control-label {
@@ -3098,7 +3118,13 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;div class=&quot;fd-controls&quot;&gt;
         &lt;div class=&quot;fd-control-meta&quot;&gt;
           &lt;div class=&quot;fd-power-reading&quot; aria-live=&quot;polite&quot; aria-atomic=&quot;true&quot;&gt;
-            &lt;span class=&quot;fd-power-summary&quot; id=&quot;fd-power-summary&quot;&gt;−14.13kW | 3.2px | 44px/s&lt;/span&gt;
+            &lt;span class=&quot;fd-power-summary&quot;&gt;
+              &lt;span class=&quot;fd-power-metric&quot; id=&quot;fd-power-value&quot;&gt;−14.13kW&lt;/span&gt;
+              &lt;span class=&quot;fd-power-divider&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;fd-power-metric&quot; id=&quot;fd-flow-width&quot;&gt;3.2px&lt;/span&gt;
+              &lt;span class=&quot;fd-power-divider&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;fd-power-metric&quot; id=&quot;fd-flow-speed&quot;&gt;44px/s&lt;/span&gt;
+            &lt;/span&gt;
           &lt;/div&gt;
           &lt;span class=&quot;fd-cap&quot; id=&quot;fd-cap-note&quot;&gt;28% of rated power&lt;/span&gt;
         &lt;/div&gt;
@@ -3128,9 +3154,9 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;label class=&quot;fd-param-card&quot;&gt;
             &lt;span class=&quot;fd-param-top&quot;&gt;
               &lt;span class=&quot;fd-param-label&quot;&gt;Min Width&lt;/span&gt;
-              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-min-width&quot; data-unit=&quot;px&quot;&gt;2 px&lt;/output&gt;
+              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-min-width&quot; data-unit=&quot;px&quot;&gt;1.5 px&lt;/output&gt;
             &lt;/span&gt;
-            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;1&quot; max=&quot;4&quot; step=&quot;0.5&quot; value=&quot;2&quot; data-param=&quot;minLineWidth&quot; aria-label=&quot;Minimum line width&quot;&gt;
+            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;1&quot; max=&quot;4&quot; step=&quot;0.5&quot; value=&quot;1.5&quot; data-param=&quot;minLineWidth&quot; aria-label=&quot;Minimum line width&quot;&gt;
           &lt;/label&gt;
 
           &lt;label class=&quot;fd-param-card&quot;&gt;
@@ -3152,9 +3178,9 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;label class=&quot;fd-param-card&quot;&gt;
             &lt;span class=&quot;fd-param-top&quot;&gt;
               &lt;span class=&quot;fd-param-label&quot;&gt;Min Speed&lt;/span&gt;
-              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-min-speed&quot; data-unit=&quot;px/s&quot;&gt;12 px/s&lt;/output&gt;
+              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-min-speed&quot; data-unit=&quot;px/s&quot;&gt;10 px/s&lt;/output&gt;
             &lt;/span&gt;
-            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;40&quot; step=&quot;1&quot; value=&quot;12&quot; data-param=&quot;minSpeed&quot; aria-label=&quot;Minimum flow speed&quot;&gt;
+            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;40&quot; step=&quot;1&quot; value=&quot;10&quot; data-param=&quot;minSpeed&quot; aria-label=&quot;Minimum flow speed&quot;&gt;
           &lt;/label&gt;
 
           &lt;label class=&quot;fd-param-card&quot;&gt;
@@ -3297,10 +3323,10 @@ html&gt;body{padding:0}&lt;/style&gt;
       if (!root) return;
 
       const curveDefaults = {
-        minLineWidth: 2,
+        minLineWidth: 1.5,
         maxLineWidth: 5,
         trackWidth: 5,
-        minSpeed: 12,
+        minSpeed: 10,
         maxSpeed: 90,
         segmentLength: 70,
         lineOverlap: 10,
@@ -3320,7 +3346,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         acGradientMainPosition: 36,
         acGradientStartOpacity: 24
       };
-      const curveConfigVersion = 8;
+      const curveConfigVersion = 10;
       const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
       const state = {
         modelMax: 50,
@@ -3377,7 +3403,9 @@ html&gt;body{padding:0}&lt;/style&gt;
       } catch (_) {}
 
       const range = document.getElementById(&quot;fd-range&quot;);
-      const powerSummary = document.getElementById(&quot;fd-power-summary&quot;);
+      const powerValue = document.getElementById(&quot;fd-power-value&quot;);
+      const flowWidth = document.getElementById(&quot;fd-flow-width&quot;);
+      const flowSpeed = document.getElementById(&quot;fd-flow-speed&quot;);
       const batteryValue = document.getElementById(&quot;fd-battery-value&quot;);
       const capNote = document.getElementById(&quot;fd-cap-note&quot;);
       const inverterModel = document.getElementById(&quot;fd-inverter-model&quot;);
@@ -3743,12 +3771,13 @@ html&gt;body{padding:0}&lt;/style&gt;
 
         range.value = String(state.batteryPower);
         range.style.setProperty(&quot;--fd-progress&quot;, (m.ratio * 100).toFixed(2) + &quot;%&quot;);
-        const movementSummary = state.isPaused &amp;&amp; m.active
+        powerValue.textContent = signedPower + &quot;kW&quot;;
+        flowWidth.textContent = (m.active ? m.width : 0).toFixed(1) + &quot;px&quot;;
+        flowSpeed.textContent = state.isPaused &amp;&amp; m.active
           ? &quot;Paused&quot;
           : m.active
-          ? m.width.toFixed(1) + &quot;px | &quot; + Math.round(m.speed) + &quot;px/s&quot;
-          : &quot;Static&quot;;
-        powerSummary.textContent = signedPower + &quot;kW | &quot; + movementSummary;
+          ? Math.round(m.speed) + &quot;px/s&quot;
+          : &quot;0px/s&quot;;
         batteryValue.textContent = signedPower;
         capNote.textContent = m.capped ? &quot;Exceeds &quot; + state.modelMax + &quot; kW · visual max&quot; : percent + &quot;% of rated power&quot;;
         capNote.classList.toggle(&quot;is-capped&quot;, m.capped);
