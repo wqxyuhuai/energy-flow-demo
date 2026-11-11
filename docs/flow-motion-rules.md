@@ -15,7 +15,7 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 - The neutral track is rendered in `5px` by default and uses the configured track color.
 - Track opacity must be calculated along the path arc length, not from a horizontal page gradient.
 - Both path endpoints must fade to transparent near their respective cards.
-- The single `Fade` control applies symmetrically to both endpoints.
+- The single `Fade` control applies symmetrically to both endpoints and defaults to `7%`.
 - The vertical leg of `L-Shape` must fade vertically, not horizontally.
 
 ## 3. Moving flow segments
@@ -32,6 +32,7 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 
 - Flow colors are sampled by path arc length, including horizontal, rounded-corner, and vertical portions.
 - The color transition must not be calculated from a fixed horizontal gradient.
+- Arc-length color samples must use butt caps with slight overlap so low-opacity tails do not break into dots.
 - The leading edge fades from transparent into the configured start color.
 - The trailing edge fades to transparent into the background.
 - DC and AC use the start, main, and end color settings independently.
