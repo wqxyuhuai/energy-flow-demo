@@ -2232,11 +2232,28 @@ html&gt;body{padding:0}&lt;/style&gt;
       border-radius: 16px;
       background: var(--lab-card);
       box-shadow: 0 1.8px 1.35px rgba(0, 0, 0, .05);
+      transition: transform 260ms cubic-bezier(.2, 0, .2, 1);
     }
 
-    #flow-styles-root .fd-hero &gt; .fd-node:first-child {
+    #flow-styles-root .fd-hero &gt; .fd-node:not(.fd-inverter) {
       grid-column: 1;
       grid-row: 1;
+    }
+
+    #flow-styles-root[data-flow-shape=&quot;lshape&quot;] .fd-hero &gt; .fd-node:not(.fd-inverter) {
+      transform: translateY(22px);
+    }
+
+    #flow-styles-root[data-flow-shape=&quot;lshape&quot;] .fd-inverter {
+      transform: translateY(-22px);
+    }
+
+    #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-hero &gt; .fd-node:not(.fd-inverter) {
+      transform: translateY(-22px);
+    }
+
+    #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-inverter {
+      transform: translateY(22px);
     }
 
     #flow-styles-root .fd-node-label {
@@ -3387,31 +3404,39 @@ html&gt;body{padding:0}&lt;/style&gt;
         const width = Math.max(1, flowStream.clientWidth);
         const height = Math.max(1, flowStream.clientHeight);
         const centerY = height / 2;
+        const startY = state.pathShape === &quot;lshape&quot;
+          ? centerY + 22
+          : state.pathShape === &quot;sshape&quot;
+          ? centerY - 22
+          : centerY;
+        const endY = state.pathShape === &quot;lshape&quot;
+          ? centerY - 22
+          : state.pathShape === &quot;sshape&quot;
+          ? centerY + 22
+          : centerY;
 
         if (state.pathShape === &quot;lshape&quot;) {
-          const turnX = width * 0.34;
-          const lowerY = height * 0.78;
-          return &quot;M 0 &quot; + centerY + &quot; H &quot; + (turnX - 10)
-            + &quot; C &quot; + (turnX + 2) + &quot; &quot; + centerY + &quot; &quot; + (turnX + 10) + &quot; &quot; + (centerY + 6) + &quot; &quot; + (turnX + 10) + &quot; &quot; + (centerY + 14)
-            + &quot; V &quot; + (lowerY - 10)
-            + &quot; C &quot; + (turnX + 10) + &quot; &quot; + (lowerY + 2) + &quot; &quot; + (turnX + 18) + &quot; &quot; + lowerY + &quot; &quot; + (turnX + 30) + &quot; &quot; + lowerY
-            + &quot; H &quot; + width;
+          const turnX = width - 8;
+          return &quot;M 0 &quot; + startY + &quot; H &quot; + (turnX - 14)
+            + &quot; Q &quot; + turnX + &quot; &quot; + startY + &quot; &quot; + turnX + &quot; &quot; + (startY - 14)
+            + &quot; V &quot; + endY;
         }
 
         if (state.pathShape === &quot;sshape&quot;) {
-          return &quot;M 0 &quot; + centerY
-            + &quot; C &quot; + (width * 0.16) + &quot; &quot; + centerY
-            + &quot; &quot; + (width * 0.21) + &quot; &quot; + (height * 0.22)
-            + &quot; &quot; + (width * 0.40) + &quot; &quot; + (height * 0.22)
-            + &quot; C &quot; + (width * 0.59) + &quot; &quot; + (height * 0.22)
-            + &quot; &quot; + (width * 0.63) + &quot; &quot; + (height * 0.78)
-            + &quot; &quot; + (width * 0.82) + &quot; &quot; + (height * 0.78)
-            + &quot; C &quot; + (width * 0.92) + &quot; &quot; + (height * 0.78)
-            + &quot; &quot; + (width * 0.96) + &quot; &quot; + centerY
-            + &quot; &quot; + width + &quot; &quot; + centerY;
+          const firstTurnX = width * 0.30;
+          const secondTurnX = width * 0.72;
+          return &quot;M 0 &quot; + startY + &quot; H &quot; + (firstTurnX - 12)
+            + &quot; Q &quot; + firstTurnX + &quot; &quot; + startY + &quot; &quot; + firstTurnX + &quot; &quot; + (startY + 12)
+            + &quot; V &quot; + (centerY - 12)
+            + &quot; Q &quot; + firstTurnX + &quot; &quot; + centerY + &quot; &quot; + (firstTurnX + 12) + &quot; &quot; + centerY
+            + &quot; H &quot; + (secondTurnX - 12)
+            + &quot; Q &quot; + secondTurnX + &quot; &quot; + centerY + &quot; &quot; + secondTurnX + &quot; &quot; + (centerY + 12)
+            + &quot; V &quot; + (endY - 12)
+            + &quot; Q &quot; + secondTurnX + &quot; &quot; + endY + &quot; &quot; + (secondTurnX + 12) + &quot; &quot; + endY
+            + &quot; H &quot; + width;
         }
 
-        return &quot;M 0 &quot; + centerY + &quot; L &quot; + width + &quot; &quot; + centerY;
+        return &quot;M 0 &quot; + startY + &quot; L &quot; + width + &quot; &quot; + endY;
       }
 
       function clamp(value, min, max) {
