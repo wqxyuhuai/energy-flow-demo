@@ -20,15 +20,18 @@
 - Use one symmetric `Fade` control for both track endpoints.
 - Preserve the `0–5%` power floor: nonzero power remains visible at `1.5px` and `10px/s`; exactly `0 kW` is inactive.
 - Clamp power above the rated maximum to a `100%` visual state; line width, speed, segment response, and derived visual values must not increase beyond their configured maxima.
+- When power exceeds the rating, show the rated maximum power and `100% of rated power`; show `<1%` for nonzero power below one percent.
 - Keep the Shape and AC/DC controls at matching height, typography, and spacing. Do not reintroduce native blue option highlighting.
+- AC uses the green color family; DC uses the yellow/orange color family.
 - Keep `6px` between the direction, Shape, and AC/DC controls.
 - The battery power value and inverter model both use `18px`.
 
 ## Interaction and quality
 
-- Preserve pause/resume, reset, state persistence, keyboard focus, reduced-motion handling, and responsive resizing.
+- Preserve pause/resume, reset, state persistence, Shape keyboard navigation, reduced-motion handling, and static-segment redraw on resize.
 - Keep slider and preset interactions neutral, smooth, and hover-visible.
 - Verify changes at all three path shapes, both AC and DC colors, low/medium/maximum power, and narrow viewports.
+- Run `npm test` before publishing.
 - Fix implementation bugs instead of silently changing established defaults or visual rules.
 
 ## Delivery

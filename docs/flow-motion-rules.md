@@ -22,6 +22,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - The page title uses the existing primary heading treatment. Section headings `Motion` and `Color` are `14px`, weight `500`, and pure black.
 - The battery power value and inverter model are both `18px`, weight `500`.
 - Supporting labels and parameter labels are generally `12px`; small metadata is `11px` or `12px`. Do not promote secondary labels into competing headline sizes.
+- Small muted text must retain WCAG AA contrast; use the shared muted color (`#6e6e73`) instead of lighter `#808080`-level text on light surfaces.
 - Control labels use title case, such as `Min Width`, `Start Pos`, and `Main Pos`.
 - The Shape selector and AC/DC selector must share the same perceived control height and typography:
   - Outer height: `34px`.
@@ -93,7 +94,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 
 - Power percentage is calculated from absolute power divided by the inverter model's maximum power. A `50 kW` model and a `30 kW` model therefore map the same percentage to different absolute kW values.
 - Negative power uses the absolute value for line thickness and speed; the sign remains visible in the power readout.
-- When power exceeds the rated maximum, clamp the effective visual ratio to `100%`. The line uses the configured maximum width, speed, segment response, and color behavior at `100%`; percentage and derived visual values must not continue increasing beyond their maxima.
+- When power exceeds the rated maximum, render the same state as `100%`: display the rated maximum power, show `100% of rated power`, and use the configured maximum width, speed, segment response, and color behavior. Actual and derived values must not visibly increase beyond their maxima.
 - Current default curve settings:
 
 | Setting | Default | Range or note |
@@ -109,6 +110,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 | Track Fade | `7%` | one symmetrical endpoint fade |
 
 - The `5%` low-power floor is a behavioral rule, not a temporary demo preset. Do not reintroduce the older threshold that suppressed the line at very small nonzero power.
+- Nonzero power below `1%` displays `<1% of rated power` rather than rounding to `0%`.
 - Changing a default is a product decision. Do not silently change defaults while tuning another control.
 
 ## 8. Color rendering
@@ -118,15 +120,15 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Arc-length color samples must use butt caps with slight overlap so low-opacity tails do not break into dots.
 - The leading edge is opaque and uses a solid round cap, not a transparent or ragged cap.
 - The trailing edge fades to transparent into the background.
-- DC and AC use the start, main, and end color settings independently.
+- DC and AC use the start, main, and end color settings independently. AC is represented by the green family; DC is represented by the yellow/orange family.
 - The final trailing fade must remain intact through corners and on vertical segments.
 - The moving segment's color pattern is anchored to the segment and moves with it; it is not a page-level gradient that stays fixed while the line travels.
 - Current color defaults:
 
 | Group | Start | Start Pos | Alpha | Main | Main Pos | End |
 | --- | --- | ---: | ---: | --- | ---: | --- |
-| DC | `#9DFF00` | `22%` | `100%` | `#12E415` | `55%` | `#11E614` |
-| AC | `#FFF700` | `12%` | `24%` | `#FF9500` | `36%` | `#FF7300` |
+| AC | `#9DFF00` | `22%` | `100%` | `#12E415` | `55%` | `#11E614` |
+| DC | `#FFF700` | `12%` | `24%` | `#FF9500` | `36%` | `#FF7300` |
 
 - Track color defaults to `#ECECEC`.
 - Keep the AC yellow transition restrained. Increasing its opacity or share enough to dominate the orange body is a regression.
@@ -137,8 +139,10 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Resume restarts the stream using the current power and curve parameters.
 - `prefers-reduced-motion` shows a static representative segment.
 - Window resizing must recompute the SVG viewBox, card-relative path, canvas dimensions, and rendered track.
+- Resizing while paused or in reduced-motion mode must redraw the current static flow segment together with the track.
 - Saved parameters must ignore incompatible old configurations through the curve configuration version.
 - The Shape menu closes after selection, on outside click, and on `Escape`; focus returns to the trigger after `Escape` or selection.
+- The Shape menu supports `ArrowUp`, `ArrowDown`, `Home`, and `End` keyboard navigation.
 - The direction toggle updates the arrow direction, moving-segment entry endpoint, and accessible label immediately.
 - Sliders must enlarge slightly on hover/focus for easier manipulation. Primary power slider: `4px` track and `14px` thumb at rest, `5px` track and `16px` thumb on hover/focus. Parameter sliders use the compact equivalent.
 - Slider tracks and thumbs are neutral gray (`#b3b3b6`, `#e1e1e3`, `#a3a3a6`) and have fully rounded ends. Do not use square slider ends or strong dark-gray thumbs.
@@ -155,6 +159,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Do not edit generated or deployed copies independently. The repository `index.html` and this rule document are the canonical sources.
 - The preview must remain usable as a direct local HTML file and must not depend on a dev server or external font files.
 - When a visual decision is finalized, update this document in the same task. Do not leave important behavior only in chat history.
+- Run `npm test` before publishing. The smoke test must cover labels, power caps, low-power fallback, paused resizing, embedded fonts, and Shape keyboard navigation.
 
 ## 11. Rejected approaches and regression guards
 
@@ -185,3 +190,4 @@ Before publication, verify:
 9. Shape and AC/DC controls have matching height, typography, alignment, and spacing.
 10. No clipped controls, overlapping cards, horizontal overflow, visible browser-default option styling, or dot-like line tails.
 11. Both flow directions animate from the correct endpoint and preserve the fixed segment length and local color pattern.
+12. Pausing and then resizing keeps the static flow segment visible.

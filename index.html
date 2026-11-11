@@ -1868,7 +1868,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       --lab-card: #ffffff;
       --lab-soft: #fcfcfd;
       --lab-text: #000000;
-      --lab-muted: #808080;
+      --lab-muted: #6e6e73;
       --lab-border: rgba(0, 0, 0, .1);
       --lab-track: #ececec;
       --lab-green: #12e415;
@@ -2758,7 +2758,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-settings-block-hint {
-      color: #909194;
+      color: var(--lab-muted);
       font-size: 12px;
     }
 
@@ -3179,10 +3179,10 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;/div&gt;
           &lt;div class=&quot;fd-color-group fd-chart-type&quot; role=&quot;group&quot; aria-label=&quot;Flow type&quot;&gt;
             &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;orange&quot; aria-pressed=&quot;false&quot;&gt;
-              &lt;span class=&quot;fd-color-dot is-orange&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;AC
+              &lt;span class=&quot;fd-color-dot is-orange&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;DC
             &lt;/button&gt;
             &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;green&quot; aria-pressed=&quot;true&quot;&gt;
-              &lt;span class=&quot;fd-color-dot is-green&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;DC
+              &lt;span class=&quot;fd-color-dot is-green&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;AC
             &lt;/button&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -3335,74 +3335,74 @@ html&gt;body{padding:0}&lt;/style&gt;
             &lt;/div&gt;
 
             &lt;div class=&quot;fd-color-row is-dc&quot;&gt;
-              &lt;span class=&quot;fd-color-row-title&quot;&gt;DC&lt;/span&gt;
+              &lt;span class=&quot;fd-color-row-title&quot;&gt;AC&lt;/span&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;Start&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#9dff00&quot; data-color-param=&quot;dcGradientStart&quot; aria-label=&quot;DC gradient start color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#9dff00&quot; data-color-param=&quot;dcGradientStart&quot; aria-label=&quot;AC gradient start color&quot;&gt;
                   &lt;output id=&quot;fd-color-dc-start&quot;&gt;#9DFF00&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Start Pos&lt;/span&gt;&lt;output id=&quot;fd-param-dc-start-position&quot; data-unit=&quot;%&quot;&gt;22%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;50&quot; step=&quot;1&quot; value=&quot;22&quot; data-param=&quot;dcGradientStartPosition&quot; aria-label=&quot;DC gradient start position&quot;&gt;
+                  &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;50&quot; step=&quot;1&quot; value=&quot;22&quot; data-param=&quot;dcGradientStartPosition&quot; aria-label=&quot;AC gradient start position&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Alpha&lt;/span&gt;&lt;output id=&quot;fd-param-dc-opacity&quot; data-unit=&quot;%&quot;&gt;100%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;100&quot; data-param=&quot;dcGradientOpacity&quot; aria-label=&quot;DC opacity&quot;&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;100&quot; data-param=&quot;dcGradientOpacity&quot; aria-label=&quot;AC opacity&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;Main&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#12e415&quot; data-color-param=&quot;dcGradientMain&quot; aria-label=&quot;DC main gradient color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#12e415&quot; data-color-param=&quot;dcGradientMain&quot; aria-label=&quot;AC main gradient color&quot;&gt;
                   &lt;output id=&quot;fd-color-dc-main&quot;&gt;#12E415&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Main Pos&lt;/span&gt;&lt;output id=&quot;fd-param-dc-main-position&quot; data-unit=&quot;%&quot;&gt;55%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;20&quot; max=&quot;80&quot; step=&quot;1&quot; value=&quot;55&quot; data-param=&quot;dcGradientMainPosition&quot; aria-label=&quot;DC main gradient position&quot;&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;20&quot; max=&quot;80&quot; step=&quot;1&quot; value=&quot;55&quot; data-param=&quot;dcGradientMainPosition&quot; aria-label=&quot;AC main gradient position&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;End&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#11e614&quot; data-color-param=&quot;dcGradientEnd&quot; aria-label=&quot;DC gradient end color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#11e614&quot; data-color-param=&quot;dcGradientEnd&quot; aria-label=&quot;AC gradient end color&quot;&gt;
                   &lt;output id=&quot;fd-color-dc-end&quot;&gt;#11E614&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
             &lt;/div&gt;
 
             &lt;div class=&quot;fd-color-row is-ac&quot;&gt;
-              &lt;span class=&quot;fd-color-row-title&quot;&gt;AC&lt;/span&gt;
+              &lt;span class=&quot;fd-color-row-title&quot;&gt;DC&lt;/span&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;Start&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#fff700&quot; data-color-param=&quot;acGradientStart&quot; aria-label=&quot;AC transition color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#fff700&quot; data-color-param=&quot;acGradientStart&quot; aria-label=&quot;DC transition color&quot;&gt;
                   &lt;output id=&quot;fd-color-ac-start&quot;&gt;#FFF700&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Start Pos&lt;/span&gt;&lt;output id=&quot;fd-param-ac-start-position&quot; data-unit=&quot;%&quot;&gt;12%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;12&quot; data-param=&quot;acGradientStartPosition&quot; aria-label=&quot;AC transition position&quot;&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;12&quot; data-param=&quot;acGradientStartPosition&quot; aria-label=&quot;DC transition position&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Alpha&lt;/span&gt;&lt;output id=&quot;fd-param-ac-opacity&quot; data-unit=&quot;%&quot;&gt;24%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;24&quot; data-param=&quot;acGradientStartOpacity&quot; aria-label=&quot;AC transition opacity&quot;&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;24&quot; data-param=&quot;acGradientStartOpacity&quot; aria-label=&quot;DC transition opacity&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;Main&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#ff9500&quot; data-color-param=&quot;acGradientMain&quot; aria-label=&quot;AC main gradient color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#ff9500&quot; data-color-param=&quot;acGradientMain&quot; aria-label=&quot;DC main gradient color&quot;&gt;
                   &lt;output id=&quot;fd-color-ac-main&quot;&gt;#FF9500&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
                 &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Main Pos&lt;/span&gt;&lt;output id=&quot;fd-param-ac-main-position&quot; data-unit=&quot;%&quot;&gt;36%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;20&quot; max=&quot;75&quot; step=&quot;1&quot; value=&quot;36&quot; data-param=&quot;acGradientMainPosition&quot; aria-label=&quot;AC main gradient position&quot;&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;20&quot; max=&quot;75&quot; step=&quot;1&quot; value=&quot;36&quot; data-param=&quot;acGradientMainPosition&quot; aria-label=&quot;DC main gradient position&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;End&lt;/span&gt;
                 &lt;span class=&quot;fd-color-swatch-row&quot;&gt;
-                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#ff7300&quot; data-color-param=&quot;acGradientEnd&quot; aria-label=&quot;AC gradient end color&quot;&gt;
+                  &lt;input class=&quot;fd-color-input&quot; type=&quot;color&quot; value=&quot;#ff7300&quot; data-color-param=&quot;acGradientEnd&quot; aria-label=&quot;DC gradient end color&quot;&gt;
                   &lt;output id=&quot;fd-color-ac-end&quot;&gt;#FF7300&lt;/output&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
@@ -3893,8 +3893,10 @@ html&gt;body{padding:0}&lt;/style&gt;
 
       function render() {
         const m = metrics(state.batteryPower);
-        const signedPower = state.batteryPower === 0 ? &quot;0&quot; : &quot;−&quot; + formatPower(state.batteryPower);
+        const visualPower = Math.min(Math.abs(Number(state.batteryPower) || 0), state.modelMax);
+        const signedPower = visualPower === 0 ? &quot;0&quot; : &quot;−&quot; + formatPower(visualPower);
         const percent = Math.round(m.ratio * 100);
+        const percentLabel = m.ratio &gt; 0 &amp;&amp; m.ratio &lt; 0.01 ? &quot;&lt;1%&quot; : percent + &quot;%&quot;;
 
         range.value = String(state.batteryPower);
         range.style.setProperty(&quot;--fd-progress&quot;, (m.ratio * 100).toFixed(2) + &quot;%&quot;);
@@ -3906,8 +3908,8 @@ html&gt;body{padding:0}&lt;/style&gt;
           ? Math.round(m.speed) + &quot;px/s&quot;
           : &quot;0px/s&quot;;
         batteryValue.textContent = signedPower;
-        capNote.textContent = m.capped ? &quot;Exceeds &quot; + state.modelMax + &quot; kW · visual max&quot; : percent + &quot;% of rated power&quot;;
-        capNote.classList.toggle(&quot;is-capped&quot;, m.capped);
+        capNote.textContent = percentLabel + &quot; of rated power&quot;;
+        capNote.classList.remove(&quot;is-capped&quot;);
         inverterModel.textContent = &quot;iHybrid &quot; + state.modelMax + &quot;K&quot;;
         root.dataset.flowColor = state.flowColor;
         root.dataset.flowDirection = state.flowDirection;
@@ -4013,6 +4015,26 @@ html&gt;body{padding:0}&lt;/style&gt;
         if (event.key === &quot;Escape&quot;) {
           setShapeMenuOpen(false);
           shapeTrigger.focus();
+          return;
+        }
+
+        if (![&quot;ArrowDown&quot;, &quot;ArrowUp&quot;, &quot;Home&quot;, &quot;End&quot;].includes(event.key)) return;
+        event.preventDefault();
+        if (shapeMenu.hidden) setShapeMenuOpen(true);
+
+        const currentIndex = shapeOptions.indexOf(document.activeElement);
+        const selectedIndex = Math.max(0, shapeOptions.findIndex((option) =&gt; option.dataset.shape === state.pathShape));
+        let nextIndex = selectedIndex;
+        if (event.key === &quot;Home&quot;) nextIndex = 0;
+        else if (event.key === &quot;End&quot;) nextIndex = shapeOptions.length - 1;
+        else if (event.key === &quot;ArrowDown&quot;) nextIndex = currentIndex &lt; 0 ? selectedIndex : (currentIndex + 1) % shapeOptions.length;
+        else if (event.key === &quot;ArrowUp&quot;) nextIndex = currentIndex &lt; 0 ? selectedIndex : (currentIndex - 1 + shapeOptions.length) % shapeOptions.length;
+        shapeOptions[nextIndex].focus();
+      });
+
+      shapeControl.addEventListener(&quot;focusout&quot;, (event) =&gt; {
+        if (!shapeControl.contains(event.relatedTarget)) {
+          setShapeMenuOpen(false);
         }
       });
 
@@ -4026,6 +4048,8 @@ html&gt;body{padding:0}&lt;/style&gt;
           previousFlowWidth = width;
           previousFlowHeight = height;
           updateFlowGraphics();
+          const hasAnimatedSegments = Array.from(flowSegments).some((segment) =&gt; !Number.isFinite(segment.staticProgress));
+          if (!hasAnimatedSegments) drawFlowFrame(performance.now());
         });
         flowResizeObserver.observe(hero);
       }

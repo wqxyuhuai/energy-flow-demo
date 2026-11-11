@@ -10,6 +10,10 @@ https://flow.carlwang.cn
 
 Open `index.html` directly in a browser. All styles, scripts, and SF Pro font assets are self-contained in the HTML file.
 
+## Smoke test
+
+Run `npm test` with Google Chrome installed. The test uses the local Chrome DevTools Protocol and has no package dependencies.
+
 ## Cloudflare Pages
 
 The repository is connected to the Cloudflare Pages project `energy-flow-demo`. Pushes to `main` deploy the site automatically.
