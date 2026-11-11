@@ -2232,7 +2232,6 @@ html&gt;body{padding:0}&lt;/style&gt;
       border-radius: 16px;
       background: var(--lab-card);
       box-shadow: 0 1.8px 1.35px rgba(0, 0, 0, .05);
-      transition: transform 260ms cubic-bezier(.2, 0, .2, 1);
     }
 
     #flow-styles-root .fd-hero &gt; .fd-node:not(.fd-inverter) {
@@ -2241,19 +2240,19 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root[data-flow-shape=&quot;lshape&quot;] .fd-hero &gt; .fd-node:not(.fd-inverter) {
-      transform: translateY(22px);
+      transform: translateY(-52px);
     }
 
     #flow-styles-root[data-flow-shape=&quot;lshape&quot;] .fd-inverter {
-      transform: translateY(-22px);
+      transform: translateY(52px);
     }
 
     #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-hero &gt; .fd-node:not(.fd-inverter) {
-      transform: translateY(-22px);
+      transform: translateY(-52px);
     }
 
     #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-inverter {
-      transform: translateY(22px);
+      transform: translateY(52px);
     }
 
     #flow-styles-root .fd-node-label {
@@ -2307,12 +2306,11 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-stream {
-      position: relative;
-      grid-column: 2;
-      grid-row: 1;
+      position: absolute;
+      inset: 0;
       z-index: 1;
       width: 100%;
-      height: 58px;
+      height: 100%;
       min-width: 0;
       overflow: hidden;
       pointer-events: none;
@@ -3390,6 +3388,9 @@ html&gt;body{padding:0}&lt;/style&gt;
       const batteryValue = document.getElementById(&quot;fd-battery-value&quot;);
       const capNote = document.getElementById(&quot;fd-cap-note&quot;);
       const inverterModel = document.getElementById(&quot;fd-inverter-model&quot;);
+      const hero = root.querySelector(&quot;.fd-hero&quot;);
+      const batteryNode = root.querySelector(&quot;.fd-hero &gt; .fd-node:not(.fd-inverter)&quot;);
+      const inverterNode = root.querySelector(&quot;.fd-inverter&quot;);
       const flowStream = root.querySelector(&quot;.fd-stream&quot;);
       const flowLayer = document.getElementById(&quot;fd-flow-layer&quot;);
       const flowSvg = root.querySelector(&quot;.fd-stream-svg&quot;);
@@ -3401,42 +3402,47 @@ html&gt;body{padding:0}&lt;/style&gt;
       const svgNamespace = &quot;http://www.w3.org/2000/svg&quot;;
 
       function createFlowPath() {
-        const width = Math.max(1, flowStream.clientWidth);
-        const height = Math.max(1, flowStream.clientHeight);
-        const centerY = height / 2;
-        const startY = state.pathShape === &quot;lshape&quot;
-          ? centerY + 22
-          : state.pathShape === &quot;sshape&quot;
-          ? centerY - 22
-          : centerY;
-        const endY = state.pathShape === &quot;lshape&quot;
-          ? centerY - 22
-          : state.pathShape === &quot;sshape&quot;
-          ? centerY + 22
-          : centerY;
+        const heroRect = hero.getBoundingClientRect();
+        const batteryRect = batteryNode.getBoundingClientRect();
+        const inverterRect = inverterNode.getBoundingClientRect();
+        const battery = {
+          left: batteryRect.left - heroRect.left,
+          right: batteryRect.right - heroRect.left,
+          top: batteryRect.top - heroRect.top,
+          bottom: batteryRect.bottom - heroRect.top,
+          centerY: batteryRect.top - heroRect.top + batteryRect.height / 2
+        };
+        const inverter = {
+          left: inverterRect.left - heroRect.left,
+          centerY: inverterRect.top - heroRect.top + inverterRect.height / 2
+        };
 
         if (state.pathShape === &quot;lshape&quot;) {
-          const turnX = width - 8;
-          return &quot;M 0 &quot; + startY + &quot; H &quot; + (turnX - 14)
-            + &quot; Q &quot; + turnX + &quot; &quot; + startY + &quot; &quot; + turnX + &quot; &quot; + (startY - 14)
-            + &quot; V &quot; + endY;
+          const startX = battery.left + (battery.right - battery.left) / 2;
+          const endX = inverter.left;
+          const direction = inverter.centerY &gt;= battery.bottom ? 1 : -1;
+          const radius = Math.min(18, Math.abs(inverter.centerY - battery.bottom) / 2);
+          return &quot;M &quot; + startX + &quot; &quot; + battery.bottom
+            + &quot; V &quot; + (inverter.centerY - direction * radius)
+            + &quot; Q &quot; + startX + &quot; &quot; + inverter.centerY + &quot; &quot; + (startX + radius) + &quot; &quot; + inverter.centerY
+            + &quot; H &quot; + endX;
         }
 
         if (state.pathShape === &quot;sshape&quot;) {
-          const firstTurnX = width * 0.30;
-          const secondTurnX = width * 0.72;
-          return &quot;M 0 &quot; + startY + &quot; H &quot; + (firstTurnX - 12)
-            + &quot; Q &quot; + firstTurnX + &quot; &quot; + startY + &quot; &quot; + firstTurnX + &quot; &quot; + (startY + 12)
-            + &quot; V &quot; + (centerY - 12)
-            + &quot; Q &quot; + firstTurnX + &quot; &quot; + centerY + &quot; &quot; + (firstTurnX + 12) + &quot; &quot; + centerY
-            + &quot; H &quot; + (secondTurnX - 12)
-            + &quot; Q &quot; + secondTurnX + &quot; &quot; + centerY + &quot; &quot; + secondTurnX + &quot; &quot; + (centerY + 12)
-            + &quot; V &quot; + (endY - 12)
-            + &quot; Q &quot; + secondTurnX + &quot; &quot; + endY + &quot; &quot; + (secondTurnX + 12) + &quot; &quot; + endY
-            + &quot; H &quot; + width;
+          const startX = battery.right;
+          const endX = inverter.left;
+          const turnX = startX + (endX - startX) * 0.66;
+          const radius = Math.min(18, (endX - startX) * 0.08);
+          return &quot;M &quot; + startX + &quot; &quot; + battery.centerY
+            + &quot; H &quot; + (turnX - radius)
+            + &quot; Q &quot; + turnX + &quot; &quot; + battery.centerY + &quot; &quot; + turnX + &quot; &quot; + (battery.centerY + radius)
+            + &quot; V &quot; + (inverter.centerY - radius)
+            + &quot; Q &quot; + turnX + &quot; &quot; + inverter.centerY + &quot; &quot; + (turnX + radius) + &quot; &quot; + inverter.centerY
+            + &quot; H &quot; + endX;
         }
 
-        return &quot;M 0 &quot; + startY + &quot; L &quot; + width + &quot; &quot; + endY;
+        return &quot;M &quot; + battery.right + &quot; &quot; + battery.centerY
+          + &quot; H &quot; + inverter.left;
       }
 
       function clamp(value, min, max) {
@@ -3483,8 +3489,8 @@ html&gt;body{padding:0}&lt;/style&gt;
       }
 
       function updateFlowGraphics() {
-        const width = Math.max(1, flowStream.clientWidth);
-        const height = Math.max(1, flowStream.clientHeight);
+        const width = Math.max(1, hero.clientWidth);
+        const height = Math.max(1, hero.clientHeight);
         const path = createFlowPath();
         const trackStops = Array.from(trackGradient.querySelectorAll(&quot;stop&quot;));
         const flowStops = Array.from(flowGradient.querySelectorAll(&quot;stop&quot;));
@@ -3733,17 +3739,17 @@ html&gt;body{padding:0}&lt;/style&gt;
       });
 
       if (typeof ResizeObserver === &quot;function&quot;) {
-        let previousFlowWidth = Math.round(flowStream.clientWidth);
-        let previousFlowHeight = Math.round(flowStream.clientHeight);
+        let previousFlowWidth = Math.round(hero.clientWidth);
+        let previousFlowHeight = Math.round(hero.clientHeight);
         flowResizeObserver = new ResizeObserver(() =&gt; {
-          const width = Math.round(flowStream.clientWidth);
-          const height = Math.round(flowStream.clientHeight);
+          const width = Math.round(hero.clientWidth);
+          const height = Math.round(hero.clientHeight);
           if (width === previousFlowWidth &amp;&amp; height === previousFlowHeight) return;
           previousFlowWidth = width;
           previousFlowHeight = height;
           updateFlowGraphics();
         });
-        flowResizeObserver.observe(flowStream);
+        flowResizeObserver.observe(hero);
       }
 
       pauseButton.addEventListener(&quot;click&quot;, () =&gt; {
