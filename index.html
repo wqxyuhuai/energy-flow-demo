@@ -2323,39 +2323,21 @@ html&gt;body{padding:0}&lt;/style&gt;
       overflow: visible;
     }
 
-    #flow-styles-root .fd-track-line,
-    #flow-styles-root .fd-stream-fill {
+    #flow-styles-root .fd-track-line {
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
-    }
-
-    #flow-styles-root .fd-track-line {
       z-index: 0;
       stroke: url(#fd-track-gradient);
     }
 
-    #flow-styles-root .fd-stream-fill {
-      z-index: 1;
-      opacity: 0;
-      stroke-dasharray: var(--fd-segment) 120;
-      stroke-dashoffset: 0;
-      animation: fd-stream-run var(--fd-duration) cubic-bezier(.42, 0, .22, 1) 1 both;
-      will-change: stroke-dashoffset;
-    }
-
-    #flow-styles-root .fd-stream-fill.is-active {
-      opacity: 1;
-    }
-
-    @keyframes fd-stream-run {
-      from {
-        stroke-dashoffset: var(--fd-segment);
-      }
-
-      to {
-        stroke-dashoffset: -100;
-      }
+    #flow-styles-root .fd-flow-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
     #flow-styles-root .fd-controls {
@@ -3022,13 +3004,6 @@ html&gt;body{padding:0}&lt;/style&gt;
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      #flow-styles-root .fd-stream-fill {
-        animation: none !important;
-        stroke-dashoffset: -28;
-        opacity: .85;
-      }
-    }
   &lt;/style&gt;
 
   &lt;div class=&quot;fd-lab-app&quot;&gt;
@@ -3073,8 +3048,8 @@ html&gt;body{padding:0}&lt;/style&gt;
               &lt;/linearGradient&gt;
             &lt;/defs&gt;
             &lt;path class=&quot;fd-track-line&quot; id=&quot;fd-track-path&quot; d=&quot;M 0 50 L 100 50&quot; stroke=&quot;url(#fd-track-gradient)&quot;&gt;&lt;/path&gt;
-            &lt;g id=&quot;fd-flow-layer&quot;&gt;&lt;/g&gt;
           &lt;/svg&gt;
+          &lt;canvas class=&quot;fd-flow-canvas&quot; id=&quot;fd-flow-canvas&quot;&gt;&lt;/canvas&gt;
         &lt;/div&gt;
 
         &lt;div class=&quot;fd-node fd-inverter&quot;&gt;
@@ -3258,12 +3233,12 @@ html&gt;body{padding:0}&lt;/style&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
-                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Start Pos&lt;/span&gt;&lt;output id=&quot;fd-param-ac-start-position&quot; data-unit=&quot;%&quot;&gt;15%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;15&quot; data-param=&quot;acGradientStartPosition&quot; aria-label=&quot;AC transition position&quot;&gt;
+                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Start Pos&lt;/span&gt;&lt;output id=&quot;fd-param-ac-start-position&quot; data-unit=&quot;%&quot;&gt;12%&lt;/output&gt;&lt;/span&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;12&quot; data-param=&quot;acGradientStartPosition&quot; aria-label=&quot;AC transition position&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
-                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Alpha&lt;/span&gt;&lt;output id=&quot;fd-param-ac-opacity&quot; data-unit=&quot;%&quot;&gt;36%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;36&quot; data-param=&quot;acGradientStartOpacity&quot; aria-label=&quot;AC transition opacity&quot;&gt;
+                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Alpha&lt;/span&gt;&lt;output id=&quot;fd-param-ac-opacity&quot; data-unit=&quot;%&quot;&gt;24%&lt;/output&gt;&lt;/span&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;24&quot; data-param=&quot;acGradientStartOpacity&quot; aria-label=&quot;AC transition opacity&quot;&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field is-color&quot;&gt;
                 &lt;span class=&quot;fd-color-field-label&quot;&gt;Main&lt;/span&gt;
@@ -3317,11 +3292,11 @@ html&gt;body{padding:0}&lt;/style&gt;
         acGradientStart: &quot;#FFF700&quot;,
         acGradientMain: &quot;#FF9500&quot;,
         acGradientEnd: &quot;#FF7300&quot;,
-        acGradientStartPosition: 15,
+        acGradientStartPosition: 12,
         acGradientMainPosition: 36,
-        acGradientStartOpacity: 36
+        acGradientStartOpacity: 24
       };
-      const curveConfigVersion = 3;
+      const curveConfigVersion = 4;
       const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
       const state = {
         modelMax: 50,
@@ -3388,15 +3363,15 @@ html&gt;body{padding:0}&lt;/style&gt;
       const batteryNode = root.querySelector(&quot;.fd-hero &gt; .fd-node:not(.fd-inverter)&quot;);
       const inverterNode = root.querySelector(&quot;.fd-inverter&quot;);
       const flowStream = root.querySelector(&quot;.fd-stream&quot;);
-      const flowLayer = document.getElementById(&quot;fd-flow-layer&quot;);
       const flowSvg = root.querySelector(&quot;.fd-stream-svg&quot;);
-      const flowDefs = flowSvg.querySelector(&quot;defs&quot;);
+      const flowCanvas = document.getElementById(&quot;fd-flow-canvas&quot;);
+      const flowContext = flowCanvas.getContext(&quot;2d&quot;);
       const trackPath = document.getElementById(&quot;fd-track-path&quot;);
       const trackGradient = document.getElementById(&quot;fd-track-gradient&quot;);
       const shapeSelect = document.getElementById(&quot;fd-shape-select&quot;);
       const pauseButton = document.getElementById(&quot;fd-pause&quot;);
       const svgNamespace = &quot;http://www.w3.org/2000/svg&quot;;
-      let flowGradientId = 0;
+      let flowPathLength = 1;
 
       function createFlowPath() {
         const heroRect = hero.getBoundingClientRect();
@@ -3496,11 +3471,14 @@ html&gt;body{padding:0}&lt;/style&gt;
         flowSvg.setAttribute(&quot;viewBox&quot;, &quot;0 0 &quot; + width + &quot; &quot; + height);
         trackPath.setAttribute(&quot;d&quot;, path);
         trackPath.style.strokeWidth = state.trackWidth.toFixed(1) + &quot;px&quot;;
-        flowLayer.querySelectorAll(&quot;.fd-stream-fill&quot;).forEach((fill) =&gt; fill.setAttribute(&quot;d&quot;, path));
+        const pixelRatio = Math.min(2, globalThis.devicePixelRatio || 1);
+        flowCanvas.width = Math.round(width * pixelRatio);
+        flowCanvas.height = Math.round(height * pixelRatio);
+        flowContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        flowPathLength = trackPath.getTotalLength();
 
-        const trackLength = trackPath.getTotalLength();
         const trackStart = trackPath.getPointAtLength(0);
-        const trackEnd = trackPath.getPointAtLength(trackLength);
+        const trackEnd = trackPath.getPointAtLength(flowPathLength);
         trackGradient.setAttribute(&quot;x1&quot;, String(trackStart.x));
         trackGradient.setAttribute(&quot;y1&quot;, String(trackStart.y));
         trackGradient.setAttribute(&quot;x2&quot;, String(trackEnd.x));
@@ -3548,79 +3526,19 @@ html&gt;body{padding:0}&lt;/style&gt;
 
       let nextFlowTimer = null;
       let flowResizeObserver = null;
-      let flowGradientFrame = null;
-      const removalTimers = new Set();
-
-      function removeFlowSegment(fill) {
-        if (!fill) return;
-        if (fill.__fdGradient) fill.__fdGradient.remove();
-        fill.remove();
-      }
+      let flowAnimationFrame = null;
+      const flowSegments = new Set();
 
       function clearStream() {
         if (nextFlowTimer) clearTimeout(nextFlowTimer);
         nextFlowTimer = null;
-        if (flowGradientFrame) cancelAnimationFrame(flowGradientFrame);
-        flowGradientFrame = null;
-        removalTimers.forEach((timer) =&gt; clearTimeout(timer));
-        removalTimers.clear();
-        flowStream.querySelectorAll(&quot;.fd-stream-fill&quot;).forEach(removeFlowSegment);
+        if (flowAnimationFrame) cancelAnimationFrame(flowAnimationFrame);
+        flowAnimationFrame = null;
+        flowSegments.clear();
+        flowContext.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
       }
 
-      function updateFlowSegmentGradient(fill) {
-        const gradient = fill.__fdGradient;
-        if (!gradient) return;
-
-        const totalLength = fill.getTotalLength();
-        const dashOffset = parseFloat(getComputedStyle(fill).strokeDashoffset) || 0;
-        const rawStart = -dashOffset;
-        const endDistance = rawStart + fill.__fdSegmentLength;
-        const startPoint = pointAtExtendedLength(fill, totalLength, totalLength * rawStart / 100);
-        const endPoint = pointAtExtendedLength(fill, totalLength, totalLength * endDistance / 100);
-        gradient.setAttribute(&quot;x1&quot;, String(startPoint.x));
-        gradient.setAttribute(&quot;y1&quot;, String(startPoint.y));
-        gradient.setAttribute(&quot;x2&quot;, String(endPoint.x));
-        gradient.setAttribute(&quot;y2&quot;, String(endPoint.y));
-      }
-
-      function pointAtExtendedLength(path, totalLength, distance) {
-        if (distance &gt;= 0 &amp;&amp; distance &lt;= totalLength) return path.getPointAtLength(distance);
-
-        const probeLength = Math.min(1, totalLength);
-        if (distance &lt; 0) {
-          const start = path.getPointAtLength(0);
-          const probe = path.getPointAtLength(probeLength);
-          const scale = (distance - 0) / probeLength;
-          return {
-            x: start.x + (probe.x - start.x) * scale,
-            y: start.y + (probe.y - start.y) * scale
-          };
-        }
-
-        const end = path.getPointAtLength(totalLength);
-        const probe = path.getPointAtLength(totalLength - probeLength);
-        const scale = (distance - totalLength) / probeLength;
-        return {
-          x: end.x + (end.x - probe.x) * scale,
-          y: end.y + (end.y - probe.y) * scale
-        };
-      }
-
-      function updateFlowGradients() {
-        const fills = Array.from(flowLayer.querySelectorAll(&quot;.fd-stream-fill&quot;));
-        if (!fills.length) {
-          flowGradientFrame = null;
-          return;
-        }
-        fills.forEach(updateFlowSegmentGradient);
-        flowGradientFrame = requestAnimationFrame(updateFlowGradients);
-      }
-
-      function ensureFlowGradientLoop() {
-        if (flowGradientFrame == null) flowGradientFrame = requestAnimationFrame(updateFlowGradients);
-      }
-
-      function createFlowGradient(fill) {
+      function createFlowColorModel() {
         const orange = state.flowColor === &quot;orange&quot;;
         const startColor = orange ? state.acGradientStart : state.dcGradientStart;
         const mainColor = orange ? state.acGradientMain : state.dcGradientMain;
@@ -3629,43 +3547,108 @@ html&gt;body{padding:0}&lt;/style&gt;
         const mainAt = (orange ? state.acGradientMainPosition : state.dcGradientMainPosition) / 100;
         const startOpacity = orange ? state.acGradientStartOpacity / 100 : state.dcGradientOpacity / 100;
         const bodyOpacity = orange ? 1 : state.dcGradientOpacity / 100;
-        const gradient = document.createElementNS(svgNamespace, &quot;linearGradient&quot;);
-        gradient.id = &quot;fd-flow-segment-gradient-&quot; + (++flowGradientId);
-        gradient.setAttribute(&quot;gradientUnits&quot;, &quot;userSpaceOnUse&quot;);
-
-        [
+        return [
           [0, startColor, 0],
           [startAt, startColor, startOpacity],
           [mainAt, mainColor, bodyOpacity],
           [0.84, mainColor, bodyOpacity],
           [1, endColor, 0]
-        ].forEach(([offset, color, opacity]) =&gt; {
-          const stop = document.createElementNS(svgNamespace, &quot;stop&quot;);
-          stop.setAttribute(&quot;offset&quot;, String(clamp(offset, 0, 1)));
-          stop.setAttribute(&quot;stop-color&quot;, color);
-          stop.setAttribute(&quot;stop-opacity&quot;, String(opacity));
-          gradient.append(stop);
-        });
-
-        flowDefs.append(gradient);
-        fill.__fdGradient = gradient;
-        fill.setAttribute(&quot;stroke&quot;, &quot;url(#&quot; + gradient.id + &quot;)&quot;);
+        ];
       }
 
-      function createFlowSegment(m) {
-        const fill = document.createElementNS(svgNamespace, &quot;path&quot;);
-        fill.setAttribute(&quot;class&quot;, &quot;fd-stream-fill is-active&quot;);
-        fill.setAttribute(&quot;d&quot;, createFlowPath());
-        fill.setAttribute(&quot;pathLength&quot;, &quot;100&quot;);
-        fill.style.strokeWidth = m.width.toFixed(2) + &quot;px&quot;;
-        fill.style.setProperty(&quot;--fd-segment&quot;, m.segment.toFixed(2));
-        fill.style.setProperty(&quot;--fd-duration&quot;, m.duration.toFixed(3) + &quot;s&quot;);
-        fill.__fdSegmentLength = m.segment;
-        createFlowGradient(fill);
-        flowLayer.append(fill);
-        updateFlowSegmentGradient(fill);
-        ensureFlowGradientLoop();
-        return fill;
+      function parseHexColor(hex) {
+        const value = hex.replace(&quot;#&quot;, &quot;&quot;);
+        return {
+          red: parseInt(value.slice(0, 2), 16),
+          green: parseInt(value.slice(2, 4), 16),
+          blue: parseInt(value.slice(4, 6), 16)
+        };
+      }
+
+      function flowColorAt(position, colorModel) {
+        const t = clamp(position, 0, 1);
+        let left = colorModel[0];
+        let right = colorModel[colorModel.length - 1];
+        for (let index = 1; index &lt; colorModel.length; index += 1) {
+          if (t &lt;= colorModel[index][0]) {
+            left = colorModel[index - 1];
+            right = colorModel[index];
+            break;
+          }
+        }
+        const span = Math.max(0.0001, right[0] - left[0]);
+        const blend = clamp((t - left[0]) / span, 0, 1);
+        const start = parseHexColor(left[1]);
+        const end = parseHexColor(right[1]);
+        const red = Math.round(start.red + (end.red - start.red) * blend);
+        const green = Math.round(start.green + (end.green - start.green) * blend);
+        const blue = Math.round(start.blue + (end.blue - start.blue) * blend);
+        const alpha = left[2] + (right[2] - left[2]) * blend;
+        return &quot;rgba(&quot; + red + &quot;, &quot; + green + &quot;, &quot; + blue + &quot;, &quot; + alpha + &quot;)&quot;;
+      }
+
+      function drawFlowSegment(segment, progress) {
+        const segmentLength = flowPathLength * clamp(segment.segmentFraction, 0, 1);
+        const travelStart = -segmentLength + progress * (flowPathLength + segmentLength);
+        const travelEnd = travelStart + segmentLength;
+        const visibleStart = Math.max(0, travelStart);
+        const visibleEnd = Math.min(flowPathLength, travelEnd);
+        if (visibleEnd &lt;= visibleStart) return;
+
+        const steps = clamp(Math.ceil((visibleEnd - visibleStart) / 5), 10, 120);
+        flowContext.lineWidth = segment.width;
+        flowContext.lineCap = &quot;round&quot;;
+        flowContext.lineJoin = &quot;round&quot;;
+
+        for (let index = 0; index &lt; steps; index += 1) {
+          const firstDistance = visibleStart + (visibleEnd - visibleStart) * index / steps;
+          const secondDistance = visibleStart + (visibleEnd - visibleStart) * (index + 1) / steps;
+          const firstPoint = trackPath.getPointAtLength(firstDistance);
+          const secondPoint = trackPath.getPointAtLength(secondDistance);
+          const centerDistance = (firstDistance + secondDistance) / 2;
+          const colorPosition = (centerDistance - travelStart) / Math.max(1, segmentLength);
+          flowContext.strokeStyle = flowColorAt(colorPosition, segment.colorModel);
+          flowContext.beginPath();
+          flowContext.moveTo(firstPoint.x, firstPoint.y);
+          flowContext.lineTo(secondPoint.x, secondPoint.y);
+          flowContext.stroke();
+        }
+      }
+
+      function drawFlowFrame(now) {
+        flowContext.clearRect(0, 0, flowCanvas.width, flowCanvas.height);
+        flowSegments.forEach((segment) =&gt; {
+          const progress = Number.isFinite(segment.staticProgress)
+            ? segment.staticProgress
+            : (now - segment.startedAt) / segment.duration;
+          if (!Number.isFinite(segment.staticProgress) &amp;&amp; progress &gt;= 1) {
+            flowSegments.delete(segment);
+            return;
+          }
+          drawFlowSegment(segment, clamp(progress, 0, 1));
+        });
+
+        flowAnimationFrame = flowSegments.size
+          ? requestAnimationFrame(drawFlowFrame)
+          : null;
+      }
+
+      function ensureFlowAnimation() {
+        if (flowAnimationFrame == null) flowAnimationFrame = requestAnimationFrame(drawFlowFrame);
+      }
+
+      function createFlowSegment(m, staticProgress) {
+        const segment = {
+          duration: m.duration * 1000,
+          segmentFraction: m.segment / 100,
+          width: m.width,
+          colorModel: createFlowColorModel(),
+          startedAt: performance.now(),
+          staticProgress
+        };
+        flowSegments.add(segment);
+        ensureFlowAnimation();
+        return segment;
       }
 
       function startStream(m) {
@@ -3673,31 +3656,18 @@ html&gt;body{padding:0}&lt;/style&gt;
         if (!m.active) return;
 
         if (state.isPaused) {
-          const fill = createFlowSegment(m);
-          fill.style.animation = &quot;none&quot;;
-          fill.style.strokeDashoffset = &quot;-28&quot;;
+          createFlowSegment(m, 0.38);
           return;
         }
 
         const duration = m.duration * 1000;
         const reducedMotion = globalThis.matchMedia &amp;&amp; globalThis.matchMedia(&quot;(prefers-reduced-motion: reduce)&quot;).matches;
-        const firstFill = createFlowSegment(m);
+        createFlowSegment(m, reducedMotion ? 0.38 : undefined);
         if (reducedMotion) return;
 
         const spawnRatio = clamp(1 - state.lineOverlap / 100, 0.55, 1);
-        const firstRemovalTimer = setTimeout(() =&gt; {
-          removeFlowSegment(firstFill);
-          removalTimers.delete(firstRemovalTimer);
-        }, duration + 120);
-        removalTimers.add(firstRemovalTimer);
-
         const spawnNext = () =&gt; {
-          const fill = createFlowSegment(m);
-          const removalTimer = setTimeout(() =&gt; {
-            removeFlowSegment(fill);
-            removalTimers.delete(removalTimer);
-          }, duration + 120);
-          removalTimers.add(removalTimer);
+          createFlowSegment(m);
           nextFlowTimer = setTimeout(spawnNext, duration * spawnRatio);
         };
 
