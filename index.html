@@ -2350,6 +2350,10 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     @keyframes fd-stream-run {
+      from {
+        stroke-dashoffset: var(--fd-segment);
+      }
+
       to {
         stroke-dashoffset: -100;
       }
@@ -3022,7 +3026,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     @media (prefers-reduced-motion: reduce) {
       #flow-styles-root .fd-stream-fill {
         animation: none !important;
-        stroke-dashoffset: 18;
+        stroke-dashoffset: -28;
         opacity: .85;
       }
     }
@@ -3597,7 +3601,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         if (state.isPaused) {
           const fill = createFlowSegment(m);
           fill.style.animation = &quot;none&quot;;
-          fill.style.strokeDashoffset = &quot;18&quot;;
+          fill.style.strokeDashoffset = &quot;-28&quot;;
           return;
         }
 
