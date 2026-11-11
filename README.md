@@ -16,4 +16,4 @@ The repository is connected to the Cloudflare Pages project `energy-flow-demo`. 
 
 ## Implementation rules
 
-See [docs/flow-motion-rules.md](docs/flow-motion-rules.md) for the flow geometry, animation, gradient, and regression rules.
+Read [AGENTS.md](AGENTS.md) before modifying the project, then use [docs/flow-motion-rules.md](docs/flow-motion-rules.md) as the detailed source of truth for product, visual, animation, interaction, responsive, and delivery rules.
