@@ -61,9 +61,10 @@ Before publishing, verify:
 
 ## 7. UI presentation
 
-- The shape selector uses the same `28px` height, `11px` text, black text color, neutral fill, and rounded corners as the AC/DC segmented control.
+- The shape selector uses the same `34px` outer height, `13px` text, black text color, neutral fill, and rounded corners as the AC/DC segmented control.
 - The selector is a single-layer gray control with no shadow; its expanded menu may use a separate elevated white surface.
-- The shape menu is a custom listbox with neutral hover and selected states; native blue option highlighting must not be used.
+- The gap between the selector and the AC/DC control is `3px`.
+- The shape menu and its options use the same `13px` text as the selector trigger; hover and selected states stay neutral, and native blue option highlighting must not be used.
 - The selector reserves space on the right for its arrow.
 - `Motion` and `Color` section headings use the same `14px` size.
 - The live power summary uses one uniform black style, with three values separated by larger gaps and vertical dividers: `−12.04kW | 3.1px | 41px/s`.
