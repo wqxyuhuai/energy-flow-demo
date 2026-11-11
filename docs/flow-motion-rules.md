@@ -62,6 +62,7 @@ Before publishing, verify:
 ## 7. UI presentation
 
 - The shape selector uses the same `28px` height, `11px` text, black text color, neutral fill, and rounded corners as the AC/DC segmented control.
+- The selector is a single-layer gray control with no shadow; its expanded menu may use a separate elevated white surface.
 - The shape menu is a custom listbox with neutral hover and selected states; native blue option highlighting must not be used.
 - The selector reserves space on the right for its arrow.
 - `Motion` and `Color` section headings use the same `14px` size.
