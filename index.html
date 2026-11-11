@@ -1885,8 +1885,6 @@ html&gt;body{padding:0}&lt;/style&gt;
       --fd-flow-end: #11e614;
       --fd-flow-start-at: 22%;
       --fd-flow-main-at: 55%;
-      --fd-track-fade-in: 16%;
-      --fd-track-fade-out: 84%;
       box-sizing: border-box;
       width: 100%;
       max-width: none;
@@ -2244,7 +2242,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root[data-flow-shape=&quot;lshape&quot;] .fd-inverter {
-      transform: translateY(52px);
+      transform: translate(-48px, 52px);
     }
 
     #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-hero &gt; .fd-node:not(.fd-inverter) {
@@ -3180,12 +3178,8 @@ html&gt;body{padding:0}&lt;/style&gt;
                 &lt;/span&gt;
               &lt;/label&gt;
               &lt;label class=&quot;fd-color-field&quot;&gt;
-                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Fade In&lt;/span&gt;&lt;output id=&quot;fd-param-track-fade-in&quot; data-unit=&quot;%&quot;&gt;24%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;24&quot; data-param=&quot;trackFadeIn&quot; aria-label=&quot;Track fade in&quot;&gt;
-              &lt;/label&gt;
-              &lt;label class=&quot;fd-color-field&quot;&gt;
-                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Fade Out&lt;/span&gt;&lt;output id=&quot;fd-param-track-fade-out&quot; data-unit=&quot;%&quot;&gt;76%&lt;/output&gt;&lt;/span&gt;
-                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;55&quot; max=&quot;100&quot; step=&quot;1&quot; value=&quot;76&quot; data-param=&quot;trackFadeOut&quot; aria-label=&quot;Track fade out&quot;&gt;
+                &lt;span class=&quot;fd-color-field-head&quot;&gt;&lt;span&gt;Fade&lt;/span&gt;&lt;output id=&quot;fd-param-track-fade&quot; data-unit=&quot;%&quot;&gt;24%&lt;/output&gt;&lt;/span&gt;
+                &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;24&quot; data-param=&quot;trackFade&quot; aria-label=&quot;Track fade&quot;&gt;
               &lt;/label&gt;
             &lt;/div&gt;
 
@@ -3284,8 +3278,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         lineOverlap: 35,
         curveExponent: 0.7,
         trackColor: &quot;#ECECEC&quot;,
-        trackFadeIn: 24,
-        trackFadeOut: 76,
+        trackFade: 24,
         dcGradientStart: &quot;#9DFF00&quot;,
         dcGradientMain: &quot;#12E415&quot;,
         dcGradientEnd: &quot;#11E614&quot;,
@@ -3299,7 +3292,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         acGradientMainPosition: 36,
         acGradientStartOpacity: 24
       };
-      const curveConfigVersion = 5;
+      const curveConfigVersion = 6;
       const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
       const state = {
         modelMax: 50,
@@ -3319,8 +3312,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         &quot;lineOverlap&quot;,
         &quot;curveExponent&quot;,
         &quot;trackColor&quot;,
-        &quot;trackFadeIn&quot;,
-        &quot;trackFadeOut&quot;,
+        &quot;trackFade&quot;,
         &quot;dcGradientStart&quot;,
         &quot;dcGradientMain&quot;,
         &quot;dcGradientEnd&quot;,
@@ -3529,8 +3521,8 @@ html&gt;body{padding:0}&lt;/style&gt;
         const startColor = orange ? state.acGradientStart : state.dcGradientStart;
         const mainColor = orange ? state.acGradientMain : state.dcGradientMain;
         const endColor = orange ? state.acGradientEnd : state.dcGradientEnd;
-        const startAt = (orange ? state.acGradientStartPosition : state.dcGradientStartPosition) / 100;
-        const mainAt = (orange ? state.acGradientMainPosition : state.dcGradientMainPosition) / 100;
+        const startAt = clamp((orange ? state.acGradientStartPosition : state.dcGradientStartPosition) / 100, 0, 0.8);
+        const mainAt = clamp((orange ? state.acGradientMainPosition : state.dcGradientMainPosition) / 100, startAt, 0.92);
         const startOpacity = orange ? state.acGradientStartOpacity / 100 : state.dcGradientOpacity / 100;
         const bodyOpacity = orange ? 1 : state.dcGradientOpacity / 100;
         return [
@@ -3539,7 +3531,11 @@ html&gt;body{padding:0}&lt;/style&gt;
           [mainAt, mainColor, bodyOpacity],
           [0.84, mainColor, bodyOpacity],
           [1, endColor, 0]
-        ];
+        ].map(([position, hex, alpha]) =&gt; ({
+          position,
+          alpha,
+          ...parseHexColor(hex)
+        }));
       }
 
       function parseHexColor(hex) {
@@ -3553,8 +3549,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
       function drawTrack() {
         trackContext.clearRect(0, 0, trackCanvas.width, trackCanvas.height);
-        const fadeIn = clamp(state.trackFadeIn / 100, 0.01, 0.95);
-        const fadeOut = clamp(state.trackFadeOut / 100, fadeIn + 0.01, 0.99);
+        const edgeFade = clamp(state.trackFade / 100, 0.01, 0.49);
         const steps = clamp(Math.ceil(flowPathLength / 5), 20, 240);
         trackContext.lineWidth = state.trackWidth;
         trackContext.lineCap = &quot;round&quot;;
@@ -3566,11 +3561,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           const secondDistance = flowPathLength * (index + 1) / steps;
           const centerDistance = (firstDistance + secondDistance) / 2;
           const position = centerDistance / Math.max(1, flowPathLength);
-          const opacity = position &lt; fadeIn
-            ? position / fadeIn
-            : position &gt; fadeOut
-            ? (1 - position) / (1 - fadeOut)
-            : 1;
+          const opacity = Math.min(position / edgeFade, (1 - position) / edgeFade, 1);
           const firstPoint = trackPath.getPointAtLength(firstDistance);
           const secondPoint = trackPath.getPointAtLength(secondDistance);
           trackContext.strokeStyle = &quot;rgba(&quot; + color.red + &quot;, &quot; + color.green + &quot;, &quot; + color.blue + &quot;, &quot; + clamp(opacity, 0, 1) + &quot;)&quot;;
@@ -3586,20 +3577,18 @@ html&gt;body{padding:0}&lt;/style&gt;
         let left = colorModel[0];
         let right = colorModel[colorModel.length - 1];
         for (let index = 1; index &lt; colorModel.length; index += 1) {
-          if (t &lt;= colorModel[index][0]) {
+          if (t &lt;= colorModel[index].position) {
             left = colorModel[index - 1];
             right = colorModel[index];
             break;
           }
         }
-        const span = Math.max(0.0001, right[0] - left[0]);
-        const blend = clamp((t - left[0]) / span, 0, 1);
-        const start = parseHexColor(left[1]);
-        const end = parseHexColor(right[1]);
-        const red = Math.round(start.red + (end.red - start.red) * blend);
-        const green = Math.round(start.green + (end.green - start.green) * blend);
-        const blue = Math.round(start.blue + (end.blue - start.blue) * blend);
-        const alpha = left[2] + (right[2] - left[2]) * blend;
+        const span = Math.max(0.0001, right.position - left.position);
+        const blend = clamp((t - left.position) / span, 0, 1);
+        const red = Math.round(left.red + (right.red - left.red) * blend);
+        const green = Math.round(left.green + (right.green - left.green) * blend);
+        const blue = Math.round(left.blue + (right.blue - left.blue) * blend);
+        const alpha = left.alpha + (right.alpha - left.alpha) * blend;
         return &quot;rgba(&quot; + red + &quot;, &quot; + green + &quot;, &quot; + blue + &quot;, &quot; + alpha + &quot;)&quot;;
       }
 
@@ -3616,10 +3605,10 @@ html&gt;body{padding:0}&lt;/style&gt;
         flowContext.lineCap = &quot;round&quot;;
         flowContext.lineJoin = &quot;round&quot;;
 
+        let firstPoint = trackPath.getPointAtLength(visibleStart);
         for (let index = 0; index &lt; steps; index += 1) {
           const firstDistance = visibleStart + (visibleEnd - visibleStart) * index / steps;
           const secondDistance = visibleStart + (visibleEnd - visibleStart) * (index + 1) / steps;
-          const firstPoint = trackPath.getPointAtLength(firstDistance);
           const secondPoint = trackPath.getPointAtLength(secondDistance);
           const centerDistance = (firstDistance + secondDistance) / 2;
           const colorPosition = (centerDistance - travelStart) / Math.max(1, segmentLength);
@@ -3628,6 +3617,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           flowContext.moveTo(firstPoint.x, firstPoint.y);
           flowContext.lineTo(secondPoint.x, secondPoint.y);
           flowContext.stroke();
+          firstPoint = secondPoint;
         }
       }
 
@@ -3644,9 +3634,8 @@ html&gt;body{padding:0}&lt;/style&gt;
           drawFlowSegment(segment, clamp(progress, 0, 1));
         });
 
-        flowAnimationFrame = flowSegments.size
-          ? requestAnimationFrame(drawFlowFrame)
-          : null;
+        const hasAnimatedSegments = Array.from(flowSegments).some((segment) =&gt; !Number.isFinite(segment.staticProgress));
+        flowAnimationFrame = hasAnimatedSegments ? requestAnimationFrame(drawFlowFrame) : null;
       }
 
       function ensureFlowAnimation() {
@@ -3748,8 +3737,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         const flowStartAt = state.flowColor === &quot;orange&quot; ? state.acGradientStartPosition : state.dcGradientStartPosition;
         const flowMainAt = state.flowColor === &quot;orange&quot; ? state.acGradientMainPosition : state.dcGradientMainPosition;
         root.style.setProperty(&quot;--lab-track&quot;, state.trackColor);
-        root.style.setProperty(&quot;--fd-track-fade-in&quot;, state.trackFadeIn + &quot;%&quot;);
-        root.style.setProperty(&quot;--fd-track-fade-out&quot;, state.trackFadeOut + &quot;%&quot;);
+        root.style.setProperty(&quot;--fd-track-fade&quot;, state.trackFade + &quot;%&quot;);
         root.style.setProperty(&quot;--fd-flow-start&quot;, flowStart);
         root.style.setProperty(&quot;--fd-flow-main&quot;, flowMain);
         root.style.setProperty(&quot;--fd-flow-end&quot;, flowEnd);
