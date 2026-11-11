@@ -27,6 +27,9 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 - Path clipping may reveal or hide part of a segment at an endpoint, but the segment's color structure and length remain unchanged.
 - Segment speed is controlled by the power ratio, `Min Speed`, `Max Speed`, and `Curve Response`; `Min Speed` defaults to `10px/s`.
 - Segment thickness is controlled by the power ratio, `Min Width`, and `Max Width`; `Min Width` defaults to `1.5px`.
+- Any nonzero power at or below `5%` of rated power uses the minimum segment width and speed, keeping the flow visible instead of fading into an inactive state.
+- Above `5%`, the power-response curve starts from that minimum state and scales continuously toward the configured maximums.
+- Exactly `0 kW` remains inactive and shows only the neutral track.
 - `Line Overlap` controls the delay before the next segment enters and defaults to `10%`.
 
 ## 4. Color rendering

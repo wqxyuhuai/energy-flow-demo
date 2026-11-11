@@ -3599,8 +3599,10 @@ html&gt;body{padding:0}&lt;/style&gt;
       function metrics(power) {
         const absolute = Math.abs(Number(power) || 0);
         const ratio = clamp(absolute / state.modelMax, 0, 1);
-        const visual = Math.pow(ratio, clamp(state.curveExponent, 0.1, 2));
-        const active = absolute &gt; Math.max(0.1, state.modelMax * 0.005);
+        const floorBand = ratio &gt; 0 &amp;&amp; ratio &lt;= 0.05;
+        const curveRatio = clamp((ratio - 0.05) / 0.95, 0, 1);
+        const visual = floorBand ? 0 : Math.pow(curveRatio, clamp(state.curveExponent, 0.1, 2));
+        const active = absolute &gt; 0;
         const minWidth = Math.min(state.minLineWidth, state.maxLineWidth);
         const maxWidth = Math.max(state.minLineWidth, state.maxLineWidth);
         const minSpeed = Math.min(state.minSpeed, state.maxSpeed);
