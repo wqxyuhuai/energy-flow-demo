@@ -15,6 +15,7 @@
 - Keep the direction toggle before the Shape selector; its arrow switches between battery-to-inverter and inverter-to-battery travel and must be persisted.
 - Keep the three routes orthogonal: `Straight`, `L-Shape`, and `S-Shape`.
 - The moving line is a fixed-length segment whose visibility changes only through clipping at cards and container edges. It must not grow, shrink, stretch, or turn into many simultaneous lines.
+- The moving segment has an opaque solid round head; its trailing edge alone fades into the background.
 - Endpoint fading and color transitions follow path arc length. Do not use fixed horizontal gradients.
 - Use one symmetric `Fade` control for both track endpoints.
 - Preserve the `0–5%` power floor: nonzero power remains visible at `1.5px` and `10px/s`; exactly `0 kW` is inactive.

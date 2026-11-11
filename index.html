@@ -3698,7 +3698,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           [startAt, startColor, startOpacity],
           [mainAt, mainColor, bodyOpacity],
           [0.84, mainColor, bodyOpacity],
-          [1, endColor, 0]
+          [1, endColor, bodyOpacity]
         ].map(([position, hex, alpha]) =&gt; ({
           position,
           alpha,
@@ -3791,6 +3791,16 @@ html&gt;body{padding:0}&lt;/style&gt;
           flowContext.lineTo(secondPoint.x, secondPoint.y);
           flowContext.stroke();
           firstPoint = secondPoint;
+        }
+
+        const headDistance = reverse ? travelStart : travelEnd;
+        const headIsVisible = headDistance &gt;= 0 &amp;&amp; headDistance &lt;= flowPathLength;
+        if (headIsVisible) {
+          const headPoint = trackPath.getPointAtLength(headDistance);
+          flowContext.fillStyle = flowColorAt(1, segment.colorModel);
+          flowContext.beginPath();
+          flowContext.arc(headPoint.x, headPoint.y, segment.width / 2, 0, Math.PI * 2);
+          flowContext.fill();
         }
       }
 

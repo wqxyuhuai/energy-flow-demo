@@ -116,7 +116,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Flow colors are sampled by path arc length, including horizontal, rounded-corner, and vertical portions.
 - The color transition must not be calculated from a fixed horizontal gradient.
 - Arc-length color samples must use butt caps with slight overlap so low-opacity tails do not break into dots.
-- The leading edge fades from transparent into the configured start color.
+- The leading edge is opaque and uses a solid round cap, not a transparent or ragged cap.
 - The trailing edge fades to transparent into the background.
 - DC and AC use the start, main, and end color settings independently.
 - The final trailing fade must remain intact through corners and on vertical segments.
@@ -160,7 +160,8 @@ An explicit later user decision supersedes these rules. When that happens, updat
 
 - Do not draw flow as many simultaneous dashes or multiple always-visible lines.
 - Do not grow or shrink the moving segment along the path. Apparent length change may only come from clipping at the card/preview edges.
-- Do not use round caps as a shortcut for endpoint fade; they create visible dots at the head and tail.
+- Do not apply round caps to every sampled substroke; use butt-capped sampling and draw one solid round circle only at the moving segment's head.
+- Do not fade the leading head to transparent. Only the trailing edge fades into the background.
 - Do not use a horizontal CSS gradient for a path that turns or runs vertically.
 - Do not keep separate Fade In and Fade Out controls. Use the single symmetric `Fade` parameter.
 - Do not reintroduce a native browser select that exposes blue or OS-specific option highlighting.
