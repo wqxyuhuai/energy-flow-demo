@@ -66,5 +66,6 @@ Before publishing, verify:
 - The gap between the selector and the AC/DC control is `3px`.
 - The shape menu and its options use the same `13px` text as the selector trigger; hover and selected states stay neutral, and native blue option highlighting must not be used.
 - The selector reserves space on the right for its arrow.
+- The battery power value and inverter model use the same `18px` primary text size.
 - `Motion` and `Color` section headings use the same `14px` size.
 - The live power summary uses one uniform black style, with three values separated by larger gaps and vertical dividers: `−12.04kW | 3.1px | 41px/s`.
