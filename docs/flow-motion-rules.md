@@ -26,7 +26,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - The Shape selector and AC/DC selector must share the same perceived control height and typography:
   - Outer height: `34px`.
   - Text: `13px`, pure black.
-  - Toolbar gap: `3px`.
+  - Toolbar gap: `6px`.
   - Shape control: one gray layer, no shadow, `9px` radius, neutral fill.
 - A `34px` direction-toggle button sits before the Shape selector. Its arrow points right for battery-to-inverter flow and rotates to point left for inverter-to-battery flow. The default is battery-to-inverter.
 - The Shape selector is a custom one-layer listbox trigger, not a native `<select>`. The collapsed control and expanded menu must not look like two stacked controls.

@@ -18,6 +18,7 @@
 - Use one symmetric `Fade` control for both track endpoints.
 - Preserve the `0–5%` power floor: nonzero power remains visible at `1.5px` and `10px/s`; exactly `0 kW` is inactive.
 - Keep the Shape and AC/DC controls at matching height, typography, and spacing. Do not reintroduce native blue option highlighting.
+- Keep `6px` between the direction, Shape, and AC/DC controls.
 - The battery power value and inverter model both use `18px`.
 
 ## Interaction and quality
