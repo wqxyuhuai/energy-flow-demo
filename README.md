@@ -21,3 +21,5 @@ The repository is connected to the Cloudflare Pages project `energy-flow-demo`. 
 ## Implementation rules
 
 Read [AGENTS.md](AGENTS.md) before modifying the project, then use [docs/flow-motion-rules.md](docs/flow-motion-rules.md) as the detailed source of truth for product, visual, animation, interaction, responsive, and delivery rules.
+
+See [docs/project-plan.md](docs/project-plan.md) for current scope, deferred items, candidate next steps, and the release checklist.

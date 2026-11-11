@@ -3,6 +3,7 @@
 ## Source of truth
 
 - Before changing the visualization, read `docs/flow-motion-rules.md` in full.
+- Read `docs/project-plan.md` before expanding scope or starting a new feature.
 - The latest explicit user decision overrides older rules. Update the rule document in the same task so future work does not repeat the conflict.
 - Keep `index.html` self-contained unless the user explicitly asks for a different architecture.
 

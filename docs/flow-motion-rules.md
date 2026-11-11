@@ -131,7 +131,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 | DC | `#FFF700` | `12%` | `24%` | `#FF9500` | `36%` | `#FF7300` |
 
 - Track color defaults to `#ECECEC`.
-- Keep the AC yellow transition restrained. Increasing its opacity or share enough to dominate the orange body is a regression.
+- Keep the DC yellow transition restrained. Increasing its opacity or share enough to dominate the orange body is a regression.
 
 ## 9. Interaction and state
 
@@ -175,7 +175,21 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Do not hide the flow at low but nonzero power. The `5%` floor exists specifically to prevent that regression.
 - Do not change default values merely to compensate for an implementation bug; fix the implementation against these rules.
 
-## 12. Regression checklist
+## 12. Flow behavior quick reference
+
+| Effective power | Moving line | Width | Speed | Visible power values |
+| --- | --- | --- | --- | --- |
+| `0 kW` | Off | `0px` | `0px/s` | `0 kW`, `0% of rated power` |
+| `0 < power ≤ 5%` | On at the minimum response level | `1.5px` by default | `10px/s` by default | Actual power, or `<1%` when below one percent |
+| `5% < power < 100%` | On with continuous power response | Interpolated from minimum to maximum | Interpolated from minimum to maximum | Actual power and rounded percentage |
+| `power ≥ 100%` | On at the maximum response level | Maximum width (`5px` by default) | Maximum speed (`90px/s` by default) | Rated maximum power and `100% of rated power` |
+
+- In every active state, the moving segment keeps a fixed length and color pattern during that pass.
+- The head is a solid round cap. The tail fades to transparent.
+- At low power, the line never disappears or becomes sub-pixel; the minimum width and speed guarantee a visible flow.
+- Above the rated maximum, no visual or displayed numeric value continues increasing.
+
+## 13. Regression checklist
 
 Before publication, verify:
 
