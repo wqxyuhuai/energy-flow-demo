@@ -93,7 +93,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 
 - Power percentage is calculated from absolute power divided by the inverter model's maximum power. A `50 kW` model and a `30 kW` model therefore map the same percentage to different absolute kW values.
 - Negative power uses the absolute value for line thickness and speed; the sign remains visible in the power readout.
-- Above the rated maximum, the visual response is capped at the configured maximums while the power readout may indicate that the value exceeds the model rating.
+- When power exceeds the rated maximum, clamp the effective visual ratio to `100%`. The line uses the configured maximum width, speed, segment response, and color behavior at `100%`; percentage and derived visual values must not continue increasing beyond their maxima.
 - Current default curve settings:
 
 | Setting | Default | Range or note |
@@ -174,7 +174,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 
 Before publication, verify:
 
-1. All three path shapes at `0%`, a value inside the `0–5%` floor band, `25%`, and `100%` power.
+1. All three path shapes at `0%`, a value inside the `0–5%` floor band, `25%`, `100%`, and a value above `100%` that must render identically to `100%`.
 2. Both AC and DC color modes.
 3. Track fades on both endpoints and follows the vertical segment in `L-Shape`.
 4. Moving segment length stays constant through every corner.
