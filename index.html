@@ -2035,15 +2035,43 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-chart-type {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 3;
+      position: static;
       gap: 1px;
       padding: 2px;
       border: 0;
       border-radius: 9px;
       background: #ececef;
+    }
+
+    #flow-styles-root .fd-hero-toolbar {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #flow-styles-root .fd-shape-select {
+      min-height: 28px;
+      padding: 2px 8px;
+      border: 0;
+      border-radius: 9px;
+      color: #55575a;
+      background: #ececef;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition:
+        color 160ms ease,
+        background-color 160ms ease;
+    }
+
+    #flow-styles-root .fd-shape-select:hover,
+    #flow-styles-root .fd-shape-select:focus-visible {
+      color: #111214;
+      background: #e4e4e7;
     }
 
     #flow-styles-root .fd-chart-type .fd-color-button {
@@ -2267,54 +2295,39 @@ html&gt;body{padding:0}&lt;/style&gt;
       grid-row: 1;
       z-index: 1;
       width: 100%;
-      height: 42px;
+      height: 58px;
       min-width: 0;
       overflow: hidden;
       pointer-events: none;
     }
 
+    #flow-styles-root .fd-stream-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
     #flow-styles-root .fd-track-line,
     #flow-styles-root .fd-stream-fill {
-      position: absolute;
-      top: 50%;
-      right: 0;
-      left: 0;
-      border-radius: 999px;
-      transform: translateY(-50%);
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     #flow-styles-root .fd-track-line {
       z-index: 0;
-      height: var(--fd-track-width, 5px);
-      background: linear-gradient(
-        90deg,
-        rgba(236, 236, 236, 0) 0%,
-        var(--lab-track) var(--fd-track-fade-in),
-        var(--lab-track) var(--fd-track-fade-out),
-        rgba(236, 236, 236, 0) 100%
-      );
+      stroke: url(#fd-track-gradient);
     }
 
     #flow-styles-root .fd-stream-fill {
-      position: absolute;
-      top: 50%;
-      left: calc(var(--fd-segment) * -1);
       z-index: 1;
-      width: var(--fd-segment);
-      height: 2px;
       opacity: 0;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        var(--fd-flow-edge) 0%,
-        var(--fd-flow-start) var(--fd-flow-start-at),
-        var(--fd-flow-main) var(--fd-flow-main-at),
-        var(--fd-flow-main) 84%,
-        var(--fd-flow-end) 100%
-      );
-      transform: translateY(-50%);
+      stroke: url(#fd-flow-gradient);
+      stroke-dasharray: var(--fd-segment) 120;
+      stroke-dashoffset: 0;
       animation: fd-stream-run var(--fd-duration) cubic-bezier(.42, 0, .22, 1) 1 both;
-      will-change: left;
+      will-change: stroke-dashoffset;
     }
 
     #flow-styles-root .fd-stream-fill.is-active {
@@ -2323,7 +2336,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
     @keyframes fd-stream-run {
       to {
-        left: 100%;
+        stroke-dashoffset: -100;
       }
     }
 
@@ -2994,10 +3007,8 @@ html&gt;body{padding:0}&lt;/style&gt;
     @media (prefers-reduced-motion: reduce) {
       #flow-styles-root .fd-stream-fill {
         animation: none !important;
-        left: 38%;
-        width: var(--fd-segment);
+        stroke-dashoffset: 18;
         opacity: .85;
-        transform: translateY(-50%);
       }
     }
   &lt;/style&gt;
@@ -3009,13 +3020,23 @@ html&gt;body{padding:0}&lt;/style&gt;
 
     &lt;section class=&quot;fd-main&quot; aria-label=&quot;Battery flow chart&quot;&gt;
       &lt;div class=&quot;fd-hero&quot;&gt;
-        &lt;div class=&quot;fd-color-group fd-chart-type&quot; role=&quot;group&quot; aria-label=&quot;Flow type&quot;&gt;
-          &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;orange&quot; aria-pressed=&quot;false&quot;&gt;
-            &lt;span class=&quot;fd-color-dot is-orange&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;AC
-          &lt;/button&gt;
-          &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;green&quot; aria-pressed=&quot;true&quot;&gt;
-            &lt;span class=&quot;fd-color-dot is-green&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;DC
-          &lt;/button&gt;
+        &lt;div class=&quot;fd-hero-toolbar&quot;&gt;
+          &lt;label class=&quot;fd-shape-control&quot;&gt;
+            &lt;span class=&quot;sr-only&quot;&gt;Path shape&lt;/span&gt;
+            &lt;select class=&quot;fd-shape-select&quot; id=&quot;fd-shape-select&quot; aria-label=&quot;Path shape&quot;&gt;
+              &lt;option value=&quot;straight&quot;&gt;Straight&lt;/option&gt;
+              &lt;option value=&quot;lshape&quot;&gt;L-Shape&lt;/option&gt;
+              &lt;option value=&quot;sshape&quot;&gt;S-Shape&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/label&gt;
+          &lt;div class=&quot;fd-color-group fd-chart-type&quot; role=&quot;group&quot; aria-label=&quot;Flow type&quot;&gt;
+            &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;orange&quot; aria-pressed=&quot;false&quot;&gt;
+              &lt;span class=&quot;fd-color-dot is-orange&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;AC
+            &lt;/button&gt;
+            &lt;button class=&quot;fd-color-button&quot; type=&quot;button&quot; data-color=&quot;green&quot; aria-pressed=&quot;true&quot;&gt;
+              &lt;span class=&quot;fd-color-dot is-green&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;DC
+            &lt;/button&gt;
+          &lt;/div&gt;
         &lt;/div&gt;
 
         &lt;div class=&quot;fd-node&quot;&gt;
@@ -3024,7 +3045,25 @@ html&gt;body{padding:0}&lt;/style&gt;
         &lt;/div&gt;
 
         &lt;div class=&quot;fd-stream&quot; aria-hidden=&quot;true&quot;&gt;
-          &lt;div class=&quot;fd-track-line&quot;&gt;&lt;/div&gt;
+          &lt;svg class=&quot;fd-stream-svg&quot; viewBox=&quot;0 0 100 100&quot; preserveAspectRatio=&quot;none&quot; aria-hidden=&quot;true&quot;&gt;
+            &lt;defs&gt;
+              &lt;linearGradient id=&quot;fd-track-gradient&quot; gradientUnits=&quot;userSpaceOnUse&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;100&quot; y2=&quot;0&quot;&gt;
+                &lt;stop offset=&quot;0&quot; stop-color=&quot;#ececec&quot; stop-opacity=&quot;0&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;0.16&quot; stop-color=&quot;#ececec&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;0.84&quot; stop-color=&quot;#ececec&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;1&quot; stop-color=&quot;#ececec&quot; stop-opacity=&quot;0&quot;&gt;&lt;/stop&gt;
+              &lt;/linearGradient&gt;
+              &lt;linearGradient id=&quot;fd-flow-gradient&quot; gradientUnits=&quot;userSpaceOnUse&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;100&quot; y2=&quot;0&quot;&gt;
+                &lt;stop offset=&quot;0&quot; stop-color=&quot;#9dff00&quot; stop-opacity=&quot;0&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;0.22&quot; stop-color=&quot;#9dff00&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;0.55&quot; stop-color=&quot;#12e415&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;0.84&quot; stop-color=&quot;#12e415&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+                &lt;stop offset=&quot;1&quot; stop-color=&quot;#11e614&quot; stop-opacity=&quot;1&quot;&gt;&lt;/stop&gt;
+              &lt;/linearGradient&gt;
+            &lt;/defs&gt;
+            &lt;path class=&quot;fd-track-line&quot; id=&quot;fd-track-path&quot; d=&quot;M 0 50 L 100 50&quot; stroke=&quot;url(#fd-track-gradient)&quot;&gt;&lt;/path&gt;
+            &lt;g id=&quot;fd-flow-layer&quot;&gt;&lt;/g&gt;
+          &lt;/svg&gt;
         &lt;/div&gt;
 
         &lt;div class=&quot;fd-node fd-inverter&quot;&gt;
@@ -3272,10 +3311,12 @@ html&gt;body{padding:0}&lt;/style&gt;
         acGradientStartOpacity: 36
       };
       const curveConfigVersion = 3;
+      const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
       const state = {
         modelMax: 50,
         batteryPower: 14.13,
         flowColor: &quot;green&quot;,
+        pathShape: &quot;straight&quot;,
         isPaused: false,
         ...curveDefaults
       };
@@ -3311,6 +3352,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         const canRestoreCurveParameters = privateState &amp;&amp; privateState.curveConfigVersion === curveConfigVersion;
         if (privateState &amp;&amp; Number.isFinite(privateState.batteryPower)) state.batteryPower = privateState.batteryPower;
         if (privateState &amp;&amp; (privateState.flowColor === &quot;green&quot; || privateState.flowColor === &quot;orange&quot;)) state.flowColor = privateState.flowColor;
+        if (privateState &amp;&amp; shapeNames.includes(privateState.pathShape)) state.pathShape = privateState.pathShape;
         curveParameterKeys.forEach((key) =&gt; {
           if (canRestoreCurveParameters &amp;&amp; Number.isFinite(privateState[key])) state[key] = privateState[key];
           if (canRestoreCurveParameters &amp;&amp; typeof privateState[key] === &quot;string&quot; &amp;&amp; /^#[0-9a-f]{6}$/i.test(privateState[key])) state[key] = privateState[key].toUpperCase();
@@ -3332,7 +3374,45 @@ html&gt;body{padding:0}&lt;/style&gt;
       const capNote = document.getElementById(&quot;fd-cap-note&quot;);
       const inverterModel = document.getElementById(&quot;fd-inverter-model&quot;);
       const flowStream = root.querySelector(&quot;.fd-stream&quot;);
+      const flowLayer = document.getElementById(&quot;fd-flow-layer&quot;);
+      const flowSvg = root.querySelector(&quot;.fd-stream-svg&quot;);
+      const trackPath = document.getElementById(&quot;fd-track-path&quot;);
+      const trackGradient = document.getElementById(&quot;fd-track-gradient&quot;);
+      const flowGradient = document.getElementById(&quot;fd-flow-gradient&quot;);
+      const shapeSelect = document.getElementById(&quot;fd-shape-select&quot;);
       const pauseButton = document.getElementById(&quot;fd-pause&quot;);
+      const svgNamespace = &quot;http://www.w3.org/2000/svg&quot;;
+
+      function createFlowPath() {
+        const width = Math.max(1, flowStream.clientWidth);
+        const height = Math.max(1, flowStream.clientHeight);
+        const centerY = height / 2;
+
+        if (state.pathShape === &quot;lshape&quot;) {
+          const turnX = width * 0.34;
+          const lowerY = height * 0.78;
+          return &quot;M 0 &quot; + centerY + &quot; H &quot; + (turnX - 10)
+            + &quot; C &quot; + (turnX + 2) + &quot; &quot; + centerY + &quot; &quot; + (turnX + 10) + &quot; &quot; + (centerY + 6) + &quot; &quot; + (turnX + 10) + &quot; &quot; + (centerY + 14)
+            + &quot; V &quot; + (lowerY - 10)
+            + &quot; C &quot; + (turnX + 10) + &quot; &quot; + (lowerY + 2) + &quot; &quot; + (turnX + 18) + &quot; &quot; + lowerY + &quot; &quot; + (turnX + 30) + &quot; &quot; + lowerY
+            + &quot; H &quot; + width;
+        }
+
+        if (state.pathShape === &quot;sshape&quot;) {
+          return &quot;M 0 &quot; + centerY
+            + &quot; C &quot; + (width * 0.16) + &quot; &quot; + centerY
+            + &quot; &quot; + (width * 0.21) + &quot; &quot; + (height * 0.22)
+            + &quot; &quot; + (width * 0.40) + &quot; &quot; + (height * 0.22)
+            + &quot; C &quot; + (width * 0.59) + &quot; &quot; + (height * 0.22)
+            + &quot; &quot; + (width * 0.63) + &quot; &quot; + (height * 0.78)
+            + &quot; &quot; + (width * 0.82) + &quot; &quot; + (height * 0.78)
+            + &quot; C &quot; + (width * 0.92) + &quot; &quot; + (height * 0.78)
+            + &quot; &quot; + (width * 0.96) + &quot; &quot; + centerY
+            + &quot; &quot; + width + &quot; &quot; + centerY;
+        }
+
+        return &quot;M 0 &quot; + centerY + &quot; L &quot; + width + &quot; &quot; + centerY;
+      }
 
       function clamp(value, min, max) {
         return Math.min(max, Math.max(min, value));
@@ -3377,6 +3457,56 @@ html&gt;body{padding:0}&lt;/style&gt;
         });
       }
 
+      function updateFlowGraphics() {
+        const width = Math.max(1, flowStream.clientWidth);
+        const height = Math.max(1, flowStream.clientHeight);
+        const path = createFlowPath();
+        const trackStops = Array.from(trackGradient.querySelectorAll(&quot;stop&quot;));
+        const flowStops = Array.from(flowGradient.querySelectorAll(&quot;stop&quot;));
+        const trackFadeIn = clamp(state.trackFadeIn / 100, 0, 1);
+        const trackFadeOut = clamp(state.trackFadeOut / 100, 0, 1);
+        const orange = state.flowColor === &quot;orange&quot;;
+        const startColor = orange ? state.acGradientStart : state.dcGradientStart;
+        const mainColor = orange ? state.acGradientMain : state.dcGradientMain;
+        const endColor = orange ? state.acGradientEnd : state.dcGradientEnd;
+        const startAt = (!orange ? state.dcGradientStartPosition : state.acGradientStartPosition) / 100;
+        const mainAt = (!orange ? state.dcGradientMainPosition : state.acGradientMainPosition) / 100;
+        const startOpacity = !orange &amp;&amp; state.flowColor === &quot;green&quot; ? state.dcGradientOpacity / 100 : orange ? state.acGradientStartOpacity / 100 : 1;
+        const bodyOpacity = orange ? 1 : state.dcGradientOpacity / 100;
+
+        flowSvg.setAttribute(&quot;viewBox&quot;, &quot;0 0 &quot; + width + &quot; &quot; + height);
+        trackGradient.setAttribute(&quot;x2&quot;, String(width));
+        flowGradient.setAttribute(&quot;x2&quot;, String(width));
+        trackPath.setAttribute(&quot;d&quot;, path);
+        trackPath.style.strokeWidth = state.trackWidth.toFixed(1) + &quot;px&quot;;
+        flowLayer.querySelectorAll(&quot;.fd-stream-fill&quot;).forEach((fill) =&gt; fill.setAttribute(&quot;d&quot;, path));
+
+        const trackSettings = [
+          [0, state.trackColor, 0],
+          [trackFadeIn, state.trackColor, 1],
+          [trackFadeOut, state.trackColor, 1],
+          [1, state.trackColor, 0]
+        ];
+        trackSettings.forEach(([offset, color, opacity], index) =&gt; {
+          trackStops[index].setAttribute(&quot;offset&quot;, String(offset));
+          trackStops[index].setAttribute(&quot;stop-color&quot;, color);
+          trackStops[index].setAttribute(&quot;stop-opacity&quot;, String(opacity));
+        });
+
+        const flowSettings = [
+          [0, startColor, 0],
+          [startAt, startColor, startOpacity],
+          [mainAt, mainColor, bodyOpacity],
+          [0.84, mainColor, bodyOpacity],
+          [1, endColor, bodyOpacity]
+        ];
+        flowSettings.forEach(([offset, color, opacity], index) =&gt; {
+          flowStops[index].setAttribute(&quot;offset&quot;, String(clamp(offset, 0, 1)));
+          flowStops[index].setAttribute(&quot;stop-color&quot;, color);
+          flowStops[index].setAttribute(&quot;stop-opacity&quot;, String(opacity));
+        });
+      }
+
       function metrics(power) {
         const absolute = Math.abs(Number(power) || 0);
         const ratio = clamp(absolute / state.modelMax, 0, 1);
@@ -3405,6 +3535,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       }
 
       let nextFlowTimer = null;
+      let flowResizeObserver = null;
       const removalTimers = new Set();
 
       function clearStream() {
@@ -3416,12 +3547,15 @@ html&gt;body{padding:0}&lt;/style&gt;
       }
 
       function createFlowSegment(m) {
-        const fill = document.createElement(&quot;div&quot;);
-        fill.className = &quot;fd-stream-fill is-active&quot;;
-        fill.style.height = m.width.toFixed(2) + &quot;px&quot;;
-        fill.style.setProperty(&quot;--fd-segment&quot;, m.segment.toFixed(2) + &quot;%&quot;);
+        const fill = document.createElementNS(svgNamespace, &quot;path&quot;);
+        fill.setAttribute(&quot;class&quot;, &quot;fd-stream-fill is-active&quot;);
+        fill.setAttribute(&quot;d&quot;, createFlowPath());
+        fill.setAttribute(&quot;pathLength&quot;, &quot;100&quot;);
+        fill.setAttribute(&quot;stroke&quot;, &quot;url(#fd-flow-gradient)&quot;);
+        fill.style.strokeWidth = m.width.toFixed(2) + &quot;px&quot;;
+        fill.style.setProperty(&quot;--fd-segment&quot;, m.segment.toFixed(2));
         fill.style.setProperty(&quot;--fd-duration&quot;, m.duration.toFixed(3) + &quot;s&quot;);
-        flowStream.append(fill);
+        flowLayer.append(fill);
         return fill;
       }
 
@@ -3432,7 +3566,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         if (state.isPaused) {
           const fill = createFlowSegment(m);
           fill.style.animation = &quot;none&quot;;
-          fill.style.left = &quot;38%&quot;;
+          fill.style.strokeDashoffset = &quot;18&quot;;
           return;
         }
 
@@ -3471,12 +3605,14 @@ html&gt;body{padding:0}&lt;/style&gt;
               modelMaxKw: state.modelMax,
               batteryPowerKw: state.batteryPower,
               flowColor: state.flowColor,
+              pathShape: state.pathShape,
               curveParameters
             },
             privateContent: {
               modelMax: state.modelMax,
               batteryPower: state.batteryPower,
               flowColor: state.flowColor,
+              pathShape: state.pathShape,
               curveConfigVersion,
               ...curveParameters
             }
@@ -3503,6 +3639,8 @@ html&gt;body{padding:0}&lt;/style&gt;
         capNote.classList.toggle(&quot;is-capped&quot;, m.capped);
         inverterModel.textContent = &quot;iHybrid &quot; + state.modelMax + &quot;K&quot;;
         root.dataset.flowColor = state.flowColor;
+        root.dataset.flowShape = state.pathShape;
+        shapeSelect.value = state.pathShape;
         const flowStart = state.flowColor === &quot;orange&quot;
           ? hexToRgba(state.acGradientStart, state.acGradientStartOpacity / 100)
           : hexToRgba(state.dcGradientStart, state.dcGradientOpacity / 100);
@@ -3523,6 +3661,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         root.style.setProperty(&quot;--fd-flow-start-at&quot;, flowStartAt + &quot;%&quot;);
         root.style.setProperty(&quot;--fd-flow-main-at&quot;, flowMainAt + &quot;%&quot;);
         root.style.setProperty(&quot;--fd-track-width&quot;, state.trackWidth.toFixed(1) + &quot;px&quot;);
+        updateFlowGraphics();
         updateParamControls();
         startStream(m);
         pauseButton.classList.toggle(&quot;is-paused&quot;, state.isPaused);
@@ -3561,6 +3700,26 @@ html&gt;body{padding:0}&lt;/style&gt;
           persist();
         });
       });
+
+      shapeSelect.addEventListener(&quot;change&quot;, () =&gt; {
+        state.pathShape = shapeNames.includes(shapeSelect.value) ? shapeSelect.value : &quot;straight&quot;;
+        render();
+        persist();
+      });
+
+      if (typeof ResizeObserver === &quot;function&quot;) {
+        let previousFlowWidth = Math.round(flowStream.clientWidth);
+        let previousFlowHeight = Math.round(flowStream.clientHeight);
+        flowResizeObserver = new ResizeObserver(() =&gt; {
+          const width = Math.round(flowStream.clientWidth);
+          const height = Math.round(flowStream.clientHeight);
+          if (width === previousFlowWidth &amp;&amp; height === previousFlowHeight) return;
+          previousFlowWidth = width;
+          previousFlowHeight = height;
+          updateFlowGraphics();
+        });
+        flowResizeObserver.observe(flowStream);
+      }
 
       pauseButton.addEventListener(&quot;click&quot;, () =&gt; {
         state.isPaused = !state.isPaused;
