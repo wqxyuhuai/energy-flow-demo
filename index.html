@@ -2252,7 +2252,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root[data-flow-shape=&quot;sshape&quot;] .fd-inverter {
-      transform: translateY(52px);
+      transform: translate(-34px, 52px);
     }
 
     #flow-styles-root .fd-node-label {
@@ -3494,10 +3494,17 @@ html&gt;body{padding:0}&lt;/style&gt;
         const trackFadeOut = clamp(state.trackFadeOut / 100, 0, 1);
 
         flowSvg.setAttribute(&quot;viewBox&quot;, &quot;0 0 &quot; + width + &quot; &quot; + height);
-        trackGradient.setAttribute(&quot;x2&quot;, String(width));
         trackPath.setAttribute(&quot;d&quot;, path);
         trackPath.style.strokeWidth = state.trackWidth.toFixed(1) + &quot;px&quot;;
         flowLayer.querySelectorAll(&quot;.fd-stream-fill&quot;).forEach((fill) =&gt; fill.setAttribute(&quot;d&quot;, path));
+
+        const trackLength = trackPath.getTotalLength();
+        const trackStart = trackPath.getPointAtLength(0);
+        const trackEnd = trackPath.getPointAtLength(trackLength);
+        trackGradient.setAttribute(&quot;x1&quot;, String(trackStart.x));
+        trackGradient.setAttribute(&quot;y1&quot;, String(trackStart.y));
+        trackGradient.setAttribute(&quot;x2&quot;, String(trackEnd.x));
+        trackGradient.setAttribute(&quot;y2&quot;, String(trackEnd.y));
 
         const trackSettings = [
           [0, state.trackColor, 0],
