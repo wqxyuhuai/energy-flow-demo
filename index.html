@@ -2052,23 +2052,44 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-shape-select {
-      min-height: 28px;
-      padding: 2px 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 28px;
+      padding: 0 30px 0 10px;
       border: 0;
       border-radius: 9px;
-      color: #55575a;
+      color: #000000;
       background: #ececef;
       font-size: 11px;
       font-weight: 500;
+      line-height: 28px;
       cursor: pointer;
       transition:
         color 160ms ease,
         background-color 160ms ease;
     }
 
+    #flow-styles-root .fd-shape-control {
+      position: relative;
+      display: inline-flex;
+      flex: none;
+    }
+
+    #flow-styles-root .fd-shape-control::after {
+      content: &quot;&quot;;
+      position: absolute;
+      top: 50%;
+      right: 11px;
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid #000000;
+      border-bottom: 1.5px solid #000000;
+      pointer-events: none;
+      transform: translateY(-68%) rotate(45deg);
+    }
+
     #flow-styles-root .fd-shape-select:hover,
     #flow-styles-root .fd-shape-select:focus-visible {
-      color: #111214;
       background: #e4e4e7;
     }
 
@@ -2149,7 +2170,8 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root button:focus-visible,
-    #flow-styles-root input:focus-visible {
+    #flow-styles-root input:focus-visible,
+    #flow-styles-root select:focus-visible {
       outline: 2px solid var(--fd-accent);
       outline-offset: 2px;
     }
@@ -2369,11 +2391,19 @@ html&gt;body{padding:0}&lt;/style&gt;
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
-      gap: 4px 8px;
+      gap: 0;
       min-width: 0;
-      padding: 6px 10px;
-      border-radius: 10px;
-      background: #f4f4f5;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    #flow-styles-root .fd-power-summary {
+      color: #000000;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
     }
 
     #flow-styles-root .fd-control-label {
@@ -2610,8 +2640,8 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #flow-styles-root .fd-settings-block-title {
-      color: #55575a;
-      font-size: 12px;
+      color: #000000;
+      font-size: 14px;
       font-weight: 500;
       letter-spacing: .03em;
     }
@@ -3068,9 +3098,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;div class=&quot;fd-controls&quot;&gt;
         &lt;div class=&quot;fd-control-meta&quot;&gt;
           &lt;div class=&quot;fd-power-reading&quot; aria-live=&quot;polite&quot; aria-atomic=&quot;true&quot;&gt;
-            &lt;span class=&quot;fd-control-label&quot;&gt;Battery Power&lt;/span&gt;
-            &lt;strong class=&quot;fd-reading-value&quot; id=&quot;fd-range-value&quot;&gt;−14.13 kW&lt;/strong&gt;
-            &lt;span class=&quot;fd-live-meta&quot; id=&quot;fd-live-meta&quot;&gt;4.1 px · 52 px/s&lt;/span&gt;
+            &lt;span class=&quot;fd-power-summary&quot; id=&quot;fd-power-summary&quot;&gt;−14.13kW | 3.2px | 44px/s&lt;/span&gt;
           &lt;/div&gt;
           &lt;span class=&quot;fd-cap&quot; id=&quot;fd-cap-note&quot;&gt;28% of rated power&lt;/span&gt;
         &lt;/div&gt;
@@ -3148,9 +3176,9 @@ html&gt;body{padding:0}&lt;/style&gt;
           &lt;label class=&quot;fd-param-card&quot;&gt;
             &lt;span class=&quot;fd-param-top&quot;&gt;
               &lt;span class=&quot;fd-param-label&quot;&gt;Line Overlap&lt;/span&gt;
-              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-overlap&quot; data-unit=&quot;%&quot;&gt;35%&lt;/output&gt;
+              &lt;output class=&quot;fd-param-value&quot; id=&quot;fd-param-overlap&quot; data-unit=&quot;%&quot;&gt;10%&lt;/output&gt;
             &lt;/span&gt;
-            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;35&quot; data-param=&quot;lineOverlap&quot; aria-label=&quot;Line overlap&quot;&gt;
+            &lt;input class=&quot;fd-param-range&quot; type=&quot;range&quot; min=&quot;0&quot; max=&quot;45&quot; step=&quot;1&quot; value=&quot;10&quot; data-param=&quot;lineOverlap&quot; aria-label=&quot;Line overlap&quot;&gt;
           &lt;/label&gt;
 
           &lt;label class=&quot;fd-param-card&quot;&gt;
@@ -3275,7 +3303,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         minSpeed: 12,
         maxSpeed: 90,
         segmentLength: 70,
-        lineOverlap: 35,
+        lineOverlap: 10,
         curveExponent: 0.7,
         trackColor: &quot;#ECECEC&quot;,
         trackFade: 7,
@@ -3292,7 +3320,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         acGradientMainPosition: 36,
         acGradientStartOpacity: 24
       };
-      const curveConfigVersion = 7;
+      const curveConfigVersion = 8;
       const shapeNames = [&quot;straight&quot;, &quot;lshape&quot;, &quot;sshape&quot;];
       const state = {
         modelMax: 50,
@@ -3349,8 +3377,7 @@ html&gt;body{padding:0}&lt;/style&gt;
       } catch (_) {}
 
       const range = document.getElementById(&quot;fd-range&quot;);
-      const rangeValue = document.getElementById(&quot;fd-range-value&quot;);
-      const liveMeta = document.getElementById(&quot;fd-live-meta&quot;);
+      const powerSummary = document.getElementById(&quot;fd-power-summary&quot;);
       const batteryValue = document.getElementById(&quot;fd-battery-value&quot;);
       const capNote = document.getElementById(&quot;fd-cap-note&quot;);
       const inverterModel = document.getElementById(&quot;fd-inverter-model&quot;);
@@ -3373,32 +3400,36 @@ html&gt;body{padding:0}&lt;/style&gt;
         const heroRect = hero.getBoundingClientRect();
         const batteryRect = batteryNode.getBoundingClientRect();
         const inverterRect = inverterNode.getBoundingClientRect();
+        const originX = heroRect.left + hero.clientLeft;
+        const originY = heroRect.top + hero.clientTop;
+        const edgeInset = 8;
         const battery = {
-          left: batteryRect.left - heroRect.left,
-          right: batteryRect.right - heroRect.left,
-          top: batteryRect.top - heroRect.top,
-          bottom: batteryRect.bottom - heroRect.top,
-          centerY: batteryRect.top - heroRect.top + batteryRect.height / 2
+          left: batteryRect.left - originX,
+          right: batteryRect.right - originX,
+          top: batteryRect.top - originY,
+          bottom: batteryRect.bottom - originY,
+          centerY: batteryRect.top - originY + batteryRect.height / 2
         };
         const inverter = {
-          left: inverterRect.left - heroRect.left,
-          centerY: inverterRect.top - heroRect.top + inverterRect.height / 2
+          left: inverterRect.left - originX,
+          centerY: inverterRect.top - originY + inverterRect.height / 2
         };
 
         if (state.pathShape === &quot;lshape&quot;) {
           const startX = battery.left + (battery.right - battery.left) / 2;
-          const endX = inverter.left;
+          const startY = battery.bottom - edgeInset;
+          const endX = inverter.left + edgeInset;
           const direction = inverter.centerY &gt;= battery.bottom ? 1 : -1;
           const radius = Math.min(18, Math.abs(inverter.centerY - battery.bottom) / 2);
-          return &quot;M &quot; + startX + &quot; &quot; + battery.bottom
+          return &quot;M &quot; + startX + &quot; &quot; + startY
             + &quot; V &quot; + (inverter.centerY - direction * radius)
             + &quot; Q &quot; + startX + &quot; &quot; + inverter.centerY + &quot; &quot; + (startX + radius) + &quot; &quot; + inverter.centerY
             + &quot; H &quot; + endX;
         }
 
         if (state.pathShape === &quot;sshape&quot;) {
-          const startX = battery.right;
-          const endX = inverter.left;
+          const startX = battery.right - edgeInset;
+          const endX = inverter.left + edgeInset;
           const turnX = startX + (endX - startX) * 0.66;
           const radius = Math.min(18, (endX - startX) * 0.08);
           return &quot;M &quot; + startX + &quot; &quot; + battery.centerY
@@ -3409,8 +3440,8 @@ html&gt;body{padding:0}&lt;/style&gt;
             + &quot; H &quot; + endX;
         }
 
-        return &quot;M &quot; + battery.right + &quot; &quot; + battery.centerY
-          + &quot; H &quot; + inverter.left;
+        return &quot;M &quot; + (battery.right - edgeInset) + &quot; &quot; + battery.centerY
+          + &quot; H &quot; + (inverter.left + edgeInset);
       }
 
       function clamp(value, min, max) {
@@ -3712,12 +3743,12 @@ html&gt;body{padding:0}&lt;/style&gt;
 
         range.value = String(state.batteryPower);
         range.style.setProperty(&quot;--fd-progress&quot;, (m.ratio * 100).toFixed(2) + &quot;%&quot;);
-        rangeValue.textContent = signedPower + &quot; kW&quot;;
-        liveMeta.textContent = state.isPaused &amp;&amp; m.active
+        const movementSummary = state.isPaused &amp;&amp; m.active
           ? &quot;Paused&quot;
           : m.active
-          ? m.width.toFixed(1) + &quot; px · &quot; + Math.round(m.speed) + &quot; px/s&quot;
+          ? m.width.toFixed(1) + &quot;px | &quot; + Math.round(m.speed) + &quot;px/s&quot;
           : &quot;Static&quot;;
+        powerSummary.textContent = signedPower + &quot;kW | &quot; + movementSummary;
         batteryValue.textContent = signedPower;
         capNote.textContent = m.capped ? &quot;Exceeds &quot; + state.modelMax + &quot; kW · visual max&quot; : percent + &quot;% of rated power&quot;;
         capNote.classList.toggle(&quot;is-capped&quot;, m.capped);

@@ -9,6 +9,7 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 - `S-Shape`: the source card sits above center, the target card sits below center, and the path exits from the source card side before turning downward.
 - `L-Shape` and `S-Shape` must keep the target card at least one visible gap away from the pause control.
 - Path start and end points must be calculated from the cards' actual bounding boxes so card-position changes update the connector automatically.
+- Path anchors must extend `8px` inside each card; the card masks the transparent fade and the visible line meets the card edge without a gap.
 
 ## 2. Track rendering
 
@@ -26,7 +27,7 @@ These rules define the expected behavior of the energy-flow visualization. Keep 
 - Path clipping may reveal or hide part of a segment at an endpoint, but the segment's color structure and length remain unchanged.
 - Segment speed is controlled by the power ratio, `Min Speed`, `Max Speed`, and `Curve Response`.
 - Segment thickness is controlled by the power ratio, `Min Width`, and `Max Width`.
-- `Line Overlap` controls the delay before the next segment enters.
+- `Line Overlap` controls the delay before the next segment enters and defaults to `10%`.
 
 ## 4. Color rendering
 
@@ -57,3 +58,10 @@ Before publishing, verify:
 5. Flow color transitions continuously along the complete path.
 6. `L-Shape` and `S-Shape` target cards do not overlap the pause control.
 7. Pause, resume, reset, persistence, and responsive resizing.
+
+## 7. UI presentation
+
+- The shape selector uses the same `28px` height, `11px` text, black text color, neutral fill, and rounded corners as the AC/DC segmented control.
+- The selector reserves space on the right for its arrow.
+- `Motion` and `Color` section headings use the same `14px` size.
+- The live power summary uses one uniform black style and the format `−12.04kW | 3.1px | 41px/s`.
