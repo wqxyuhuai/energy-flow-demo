@@ -14,7 +14,7 @@ An explicit later user decision supersedes these rules. When that happens, updat
 - Keep the desktop content width at `880px` unless a new responsive requirement explicitly changes it.
 - Use restrained radii, thin neutral borders, and very light shadows. Avoid strong outlines, heavy shadows, and colored borders.
 - The chart preview is a distinct white surface with a `2px` light-gray border (`#d8dade`), a `16px` radius, and a fixed desktop height of `260px`. The border is intentional so the demo area stands out from the settings area.
-- The settings area is a separate white panel with a `18px` radius, a subtle border/shadow, generous top and bottom padding, and no dependency on viewport stretching.
+- The settings area is a separate white panel with a `18px` radius, a subtle border, no shadow, generous top and bottom padding, and no dependency on viewport stretching.
 - Keep the section hierarchy clear: `Energy Flow Preview`, `Curve Settings`, `Motion`, and `Color`.
 
 ## 2. Typography and component styling
